@@ -1,69 +1,117 @@
 import React, { useMemo, useState } from "react";
 import { motion } from "framer-motion";
-import { Github, Linkedin, Mail, Phone, Download, Moon, Sun, ExternalLink, ArrowRight, Code, Shield, Cloud, TerminalSquare } from "lucide-react";
-import { Tooltip, ResponsiveContainer, RadarChart, PolarGrid, PolarAngleAxis, PolarRadiusAxis, Radar } from "recharts";
+import {
+  Github,
+  Linkedin,
+  Mail,
+  Phone,
+  Download,
+  Moon,
+  Sun,
+  ExternalLink,
+  ArrowRight,
+  Code,
+  Shield,
+  Zap,
+  Cloud,
+  TerminalSquare,
+} from "lucide-react";
+import {
+  Tooltip,
+  ResponsiveContainer,
+  RadarChart,
+  PolarGrid,
+  PolarAngleAxis,
+  PolarRadiusAxis,
+  Radar,
+} from "recharts";
 import { Button } from "./components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
 
 const Container = ({ children, className = "" }) => (
-  <div className={`mx-auto w-full max-w-7xl px-4 md:px-6 ${className}`}>{children}</div>
+    <div className={`mx-auto w-full max-w-7xl px-4 md:px-6 ${className}`}>
+      {children}
+    </div>
 );
 
 const Section = ({ id, title, subtitle, children }) => (
-  <section id={id} className="scroll-mt-24 py-10 md:py-16">
-    <Container>
-      <motion.div initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ duration: 0.5 }}>
-        <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h2>
-        {subtitle && <p className="mt-2 text-muted-foreground max-w-2xl">{subtitle}</p>}
-        <div className="mt-6">{children}</div>
-      </motion.div>
-    </Container>
-  </section>
+    <section id={id} className="scroll-mt-24 py-10 md:py-16">
+      <Container>
+        <motion.div
+            initial={{ opacity: 0, y: 12 }}
+            whileInView={{ opacity: 1, y: 0 }}
+            viewport={{ once: true }}
+            transition={{ duration: 0.5 }}
+        >
+          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h2>
+          {subtitle && (
+              <p className="mt-2 text-muted-foreground max-w-2xl">{subtitle}</p>
+          )}
+          <div className="mt-6">{children}</div>
+        </motion.div>
+      </Container>
+    </section>
 );
 
 const PROFILE = {
   name: "Vedant Vinayak Bodhe",
-  role: "Security Engineer • DevSecOps • Software Engineer",
-  summary: "Security-minded engineer focusing on Policy-as-Code, SSDLC, and cloud-native automation. I build reliable pipelines, harden containers, and turn compliance into code.",
+  role: "Security Engineer • Analyst • Software Engineer (DevOps)",
+  summary:
+      "Dedicated Applied Computer Science student with a passion for software development, IT security, and engineering. I strive to develop innovative and sustainable software solutions and design secure, efficient IT infrastructures that optimally support business processes.",
   location: "Fulda, Germany",
-  email: "vedant@example.com",
-  phone: "+49 000 0000000",
+  email: "vedantbodhe@gmail.com",
+  // phone: "+49 000 0000000", // optional — if set, the Phone card will show
   links: {
-    github: "https://github.com/your-handle",
+    github: "https://github.com/vedantbodhe",
     linkedin: "https://www.linkedin.com/in/vedant-bodhe/",
     portfolio: "#projects",
   },
 };
 
 const SKILLS_RADAR = [
-  { subject: "Python", A: 86 },
-  { subject: "Java", A: 78 },
-  { subject: "Rego/OPA", A: 84 },
-  { subject: "AWS", A: 72 },
-  { subject: "Kubernetes", A: 76 },
-  { subject: "CI/CD", A: 88 },
+  { subject: "Programming", A: 85 },
+  { subject: "Security Engineering", A: 85 },
+  { subject: "Network Administration", A: 80 },
+  { subject: "Cloud Computing", A: 70 },
+  { subject: "Project Planning and Consulting", A: 70 },
+  { subject: "AI", A: 70 },
 ];
+
+const AngleTick = ({ payload, x, y, textAnchor }) => {
+  const words = String(payload?.value ?? "").split(" ");
+  return (
+      <text x={x} y={y} textAnchor={textAnchor} fontSize={11} fill="currentColor">
+        {words.map((w, i) => (
+            <tspan key={i} x={x} dy={i === 0 ? 0 : 12}>{w}</tspan>
+        ))}
+      </text>
+  );
+};
+
 
 const EXPERIENCE = [
   {
-    role: "Security & Quality Engineering – Praktikum",
-    company: "DB InfraGO",
-    period: "Apr 2025 – Sep 2025",
+    role: "Internship : Security & Quality Engineering",
+    company: "Deutsche Bahn InfraGO",
+    period: "April 2025 – October 2025",
     bullets: [
-      "Built Policy-as-Code engine for SSDLC checks (OPA/Rego).",
-      "Automated SCA/secret scans in GitLab CI; integrated DefectDojo.",
-      "Hardened containers aligned to CIS Docker Benchmarks (Trivy/Grype).",
+      "Implementation of an automated Policy-as-Code engine (Open Policy Agent) for automatic compliance validation facilitation in DB InfraGO’s SSDLC (Secure Software Development LifeCycle)",
+      "Development of a Docker/Podman based Image Compliance Scanner app with a React-TypeScript frontend and a Python FastAPI backend",
+      "Application of DevSecOps principles in CI/CD pipelines: Vulnerability scans, Policy Management, and Quality Assurance processes",
+      "Advising development teams on the optimization of their SSDLC",
+      "Writing Python automation scripts to scan and harden container images and registries according to the CIS Docker Benchmarks using Trivy, Grype and Syft",
     ],
-    tags: ["OPA/Rego", "GitLab CI", "Trivy", "Grype", "Python"],
+    tags: ["Policy-as-Code", "GitLab CI/CD", "Security Engineering", "Python"],
   },
   {
-    role: "Werkstudent IT – SAP S/4HANA Migration",
+    role: "Working Student IT – SAP S/4HANA Data-Migration",
     company: "Deutsche Bahn InfraGO",
-    period: "Mar 2024 – Mar 2025",
+    period: "March 2024 – March 2025",
     bullets: [
-      "Supported data migration and integrity checks using Python/R.",
-      "Helped with access roles and data access management.",
+      "Assisted in migrating the SAP database application FIMA (Financial Management) from SAP R3K to S/4HANA",
+      "Programmed scripts in R and Python for data analysis and migration between SAP systems",
+      "Supported SAP authorizations and workplace roles with a focus on data access management",
     ],
     tags: ["Python", "R", "SAP", "Data Quality"],
   },
@@ -82,22 +130,113 @@ const EXPERIENCE = [
 const PROJECTS = [
   {
     title: "Policy-as-Code Playground",
-    description: "Evaluate Rego policies live, with GitLab/GitHub inputs and result diffs.",
+    description:
+        "Evaluate Rego policies live, with GitLab/GitHub inputs and result diffs.",
     link: "https://example.com/pac-playground",
     tags: ["Go", "OPA", "React", "Vite"],
   },
   {
     title: "Container Compliance Scanner",
-    description: "Docker image scanner with SBOM, Trivy/Grype, and dashboard UI.",
+    description:
+        "Docker image scanner with SBOM, Trivy/Grype, and dashboard UI.",
     link: "https://example.com/compliance-scanner",
     tags: ["Python", "FastAPI", "React"],
   },
   {
     title: "Damage Reporter AI",
-    description: "FastAPI + Vision AI prototype to triage and email incident reports.",
+    description:
+        "FastAPI + Vision AI prototype to triage and email incident reports.",
     link: "https://example.com/damage-reporter",
     tags: ["FastAPI", "OpenAI", "Email"],
   },
+];
+
+/* === New data: Education, Papers, Skills, Soft Skills, Languages === */
+const EDUCATION = [
+  {
+    degree: "B.Sc. International Science and Engineering",
+    detail: "Specialization: Applied Computer Science",
+    period: "Oct 2021 – Oct 2025 (planned graduation end of Sep 2025)",
+    school: "Hochschule Fulda",
+    location: "Fulda, Germany",
+  },
+  {
+    degree: "B.A. Journalism and Mass Communication",
+    detail: "Specialization: Sound Engineering",
+    period: "Jun 2017 – Aug 2020",
+    school: "Tilak Maharashtra Vidyapeeth",
+    location: "Pune, India",
+  },
+];
+
+const PAPERS = [
+  {
+    title:
+        "Evaluation of User Understanding of Privacy and Security Risks in Consent Banners: The Role of Dark Patterns",
+    period: "2024–2025",
+    org: "Hochschule Fulda (Academic Paper)",
+    location: "Fulda, Germany",
+  },
+  {
+    title:
+        "Facilitating Shift-Left Security using Policy-as-Code in the SSDLC: A Deutsche Bahn InfraGO Case Study",
+    period: "2025 (Bachelor Thesis)",
+    org: "DB InfraGO & Hochschule Fulda",
+    location: "Frankfurt am Main & Fulda, Germany",
+  },
+];
+
+const TECH_SKILLS = [
+  { k: "Programming", v: "Python, Java, JavaScript, TypeScript, Rego, Go, R" },
+  { k: "Frontend", v: "React, React Native, Angular, Vue, Vaadin" },
+  {
+    k: "Backend",
+    v: "Node.js, npm, Express, Next.js, Django, Flask, FastAPI, Spring Boot, Hibernate",
+  },
+  {
+    k: "DevOps",
+    v: "CI/CD (GitLab/GitHub/Jenkins/Bitbucket), Ansible, Helm, Docker & Kubernetes, Security Scans (Trivy, Grype, SAST, DAST, DefectDojo)",
+  },
+  { k: "Databases", v: "MySQL, PostgreSQL, SQLAlchemy, MongoDB, SAP S/4HANA" },
+  {
+    k: "Tools",
+    v: "Git, WSL (Ubuntu), VS Code, IntelliJ, Eclipse, JIRA, Confluence, Docker, Podman, OpenShift, Azure, MS 365",
+  },
+  {
+    k: "Cloud & IaC",
+    v: "Terraform, AWS (EC2, Elastic Beanstalk, Route 53, S3, Lambda, IAM), Azure (ARM, Functions), Kubernetes, GitLab CI/CD, FinOps",
+  },
+  { k: "Policy-as-Code", v: "Open Policy Agent, Kyverno" },
+  { k: "Observability", v: "Prometheus, Grafana, ELK (Elasticsearch, Logstash, Kibana)" },
+  { k: "AI Platforms", v: "OpenAI Vision/API, Google Vertex AI, Gemini API, TensorFlow Lite" },
+  { k: "ML", v: "NumPy, pandas, scikit-learn, Matplotlib, Jupyter, PyTorch" },
+  {
+    k: "Compliance",
+    v: "ISO/IEC 27001, DB RAIS, BSI IT-Grundschutz, GDPR (ethical application throughout lifecycle)",
+  },
+];
+
+const SOFT_SKILLS = {
+  soft: [
+    "Self-driven initiative",
+    "Communicative in team processes",
+    "Multilingual proficiency",
+    "Rapid adaptability in agile teams",
+  ],
+  hobbies: [
+    "Learning new programming languages & technologies",
+    "Board & video games",
+    "Music production",
+    "Travelling",
+  ],
+  sports: ["Fitness", "Badminton", "Football", "Bike-riding", "Hiking"],
+};
+
+const LANGUAGES = [
+  { name: "German (DSH-2 / C1)", level: "Fluent" },
+  { name: "English (IELTS 8.0)", level: "Fluent / near-native" },
+  { name: "Marathi", level: "Native" },
+  { name: "Hindi", level: "Native" },
 ];
 
 const useTheme = () => {
@@ -119,286 +258,574 @@ export default function App() {
   const { dark, setDark } = useTheme();
 
   const heroIcons = useMemo(
-    () => [
-      { Icon: Shield, label: "Security" },
-      { Icon: Cloud, label: "Cloud" },
-      { Icon: Code, label: "Dev" },
-      { Icon: TerminalSquare, label: "DevOps" },
-    ],
-    []
+      () => [
+        { Icon: Shield, label: "Security" },
+        { Icon: Cloud, label: "Cloud" },
+        { Icon: Code, label: "Dev" },
+        { Icon: TerminalSquare, label: "DevOps" },
+      ],
+      []
   );
 
   return (
-    <div className="min-h-screen bg-background text-foreground">
-      <header className="sticky top-0 z-50 border-b bg-background/80 backdrop-blur">
-        <Container className="flex h-16 items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="h-8 w-8 rounded-2xl bg-primary/15 grid place-items-center">
-              <Shield className="h-5 w-5" />
+      <div className="min-h-screen bg-background text-foreground">
+        {/* Header */}
+        <header className="sticky top-0 z-50 border-b bg-background/80 dark:bg-white/80 backdrop-blur">
+          <Container className="flex h-16 items-center justify-between">
+            <div className="flex items-center gap-3">
+              <div className="h-8 w-8 rounded-2xl bg-primary/15 grid place-items-center">
+                <Shield className="h-5 w-5"/>
+              </div>
+              <span className="font-semibold text-zinc-900 dark:text-zinc-900">
+        {PROFILE.name}
+      </span>
             </div>
-            <span className="font-semibold">{PROFILE.name.split(" ")[0]}</span>
-          </div>
-          <nav className="hidden md:flex items-center gap-1">
-            {[
-              ["About", "about"],
-              ["Skills", "skills"],
-              ["Experience", "experience"],
-              ["Projects", "projects"],
-              ["Contact", "contact"],
-            ].map(([label, id]) => (
-              <Button key={id} variant="ghost" className="px-3" onClick={() => scrollToId(id)}>
-                {label}
-              </Button>
-            ))}
-          </nav>
-          <div className="flex items-center gap-2">
-            <Button variant="outline" onClick={() => setDark((d) => !d)} aria-label="Toggle theme">
-              {dark ? <Sun className="h-4 w-4" /> : <Moon className="h-4 w-4" />}
-            </Button>
-            <Button onClick={() => window.print()}>
-              <Download className="mr-2 h-4 w-4" /> Export PDF
-            </Button>
-          </div>
-        </Container>
-      </header>
 
-      <section className="relative overflow-hidden border-b">
-        <Container>
-          <div className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-20">
-            <motion.div initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6 }}>
-              <div className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-muted-foreground">
-                <span className="inline-block h-2 w-2 rounded-full bg-emerald-500" /> Open to work from Nov 2025
-              </div>
-              <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
-                {PROFILE.name}
-              </h1>
-              <p className="mt-2 text-xl text-muted-foreground">{PROFILE.role}</p>
-              <p className="mt-4 max-w-prose leading-relaxed text-muted-foreground">
-                {PROFILE.summary}
-              </p>
-              <div className="mt-6 flex flex-wrap gap-3">
-                <a href={PROFILE.links.github} target="_blank" rel="noreferrer">
-                  <Button variant="outline"><Github className="mr-2 h-4 w-4"/>GitHub</Button>
-                </a>
-                <a href={PROFILE.links.linkedin} target="_blank" rel="noreferrer">
-                  <Button variant="outline"><Linkedin className="mr-2 h-4 w-4"/>LinkedIn</Button>
-                </a>
-                <Button onClick={() => scrollToId("contact")}>
-                  Contact <ArrowRight className="ml-2 h-4 w-4"/>
-                </Button>
-              </div>
-              <div className="mt-4 text-sm text-muted-foreground">
-                <span className="mr-3">{PROFILE.location}</span>•
-                <span className="ml-3">{PROFILE.email}</span>
-              </div>
-            </motion.div>
-
-            <motion.div className="relative" initial={{ opacity: 0, y: 12 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.6, delay: 0.1 }}>
-              <Card className="relative overflow-hidden">
-                <CardHeader>
-                  <CardTitle className="text-lg">What I do</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="grid grid-cols-2 gap-4">
-                    {heroIcons.map(({ Icon, label }, idx) => (
-                      <motion.div key={label} className="rounded-2xl border p-4 grid place-items-center text-center" initial={{ opacity: 0, y: 8 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} transition={{ delay: idx * 0.05 }}>
-                        <Icon className="h-6 w-6 mb-2" />
-                        <div className="text-sm font-medium">{label}</div>
-                      </motion.div>
-                    ))}
-                  </div>
-                  <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
-                    {[
-                      { k: "Experience", v: "DevSecOps, AppSec, Cloud" },
-                      { k: "Strength", v: "Policy-as-Code & CI/CD" },
-                      { k: "Currently", v: "Open from Nov ’25" },
-                    ].map((item) => (
-                      <div key={item.k} className="rounded-xl border px-3 py-2 text-sm">
-                        <div className="font-medium">{item.k}</div>
-                        <div className="text-muted-foreground">{item.v}</div>
-                      </div>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-            </motion.div>
-          </div>
-        </Container>
-      </section>
-
-      <Section id="about" title="About" subtitle="Quick snapshot of who I am and how I work.">
-        <div className="grid gap-6 md:grid-cols-3">
-          <Card>
-            <CardHeader>
-              <CardTitle>Principles</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <p>Security-by-default • Infrastructure-as-Code • Everything tests.</p>
-              <p>Automate the boring parts. Measure, iterate, improve.</p>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Highlights</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2 text-sm text-muted-foreground">
-              <ul className="list-disc pl-5 space-y-2">
-                <li>Designed a Policy-as-Code engine for SSDLC in GitLab.</li>
-                <li>Hardened Docker images with CIS-aligned checks.</li>
-                <li>Built dashboards for SBOM and vuln triage.</li>
-              </ul>
-            </CardContent>
-          </Card>
-          <Card>
-            <CardHeader>
-              <CardTitle>Stack</CardTitle>
-            </CardHeader>
-            <CardContent className="flex flex-wrap gap-2">
-              {["Python", "Java", "Go", "React", "FastAPI", "OPA/Rego", "AWS", "Kubernetes", "GitLab CI"].map((t) => (
-                <Badge key={t} variant="secondary" className="px-2 py-1 text-xs">{t}</Badge>
+            <nav className="hidden md:flex items-center gap-1">
+              {[
+                ["About", "about"],
+                ["Skills", "skills"],
+                ["Experience", "experience"],
+                ["Projects", "projects"],
+                ["Contact", "contact"],
+              ].map(([label, id]) => (
+                  <Button
+                      key={id}
+                      variant="ghost"
+                      className="px-3 text-zinc-900 dark:text-zinc-900"
+                      onClick={() => scrollToId(id)}
+                  >
+                    {label}
+                  </Button>
               ))}
-            </CardContent>
-          </Card>
-        </div>
-      </Section>
+            </nav>
 
-      <Section id="skills" title="Skills" subtitle="A visual snapshot of my current strengths.">
-        <div className="grid gap-6 md:grid-cols-2">
-          <Card>
-            <CardHeader>
-              <CardTitle>Core Competencies</CardTitle>
-            </CardHeader>
-            <CardContent className="h-[340px]">
-              <ResponsiveContainer width="100%" height="100%">
-                <RadarChart data={SKILLS_RADAR} cx="50%" cy="50%" outerRadius="70%">
-                  <PolarGrid />
-                  <PolarAngleAxis dataKey="subject" />
-                  <PolarRadiusAxis angle={30} domain={[0, 100]} tickCount={6} />
-                  <Radar dataKey="A" stroke="currentColor" fill="currentColor" fillOpacity={0.2} />
-                  <Tooltip contentStyle={{ borderRadius: 12 }} />
-                </RadarChart>
-              </ResponsiveContainer>
-            </CardContent>
-          </Card>
+            <div className="flex items-center gap-2">
+              <Button
+                  variant="outline"
+                  onClick={() => setDark((d) => !d)}
+                  aria-label="Toggle theme"
+              >
+                {dark ? <Sun className="h-4 w-4"/> : <Moon className="h-4 w-4"/>}
+              </Button>
 
-          <Card>
-            <CardHeader>
-              <CardTitle>Keywords & Tools</CardTitle>
-            </CardHeader>
-            <CardContent>
-              <div className="flex flex-wrap gap-2">
-                {["Policy-as-Code", "SSDLC", "SBOM", "Trivy", "Grype", "Syft", "DefectDojo", "Terraform", "Helm", "Prometheus", "Grafana", "Git", "Linux"].map((t) => (
-                  <Badge key={t} className="px-2 py-1 text-xs">{t}</Badge>
-                ))}
-              </div>
-            </CardContent>
-          </Card>
-        </div>
-      </Section>
+              <a href={`mailto:${PROFILE.email}`}>
+                <Button>
+                  <Mail className="mr-2 h-4 w-4"/> Get in touch!
+                </Button>
+              </a>
+            </div>
+          </Container>
+        </header>
 
-      <Section id="experience" title="Experience" subtitle="Roles, responsibilities, and impact.">
-        <div className="space-y-6">
-          {EXPERIENCE.map((exp, i) => (
-            <motion.div key={exp.company + i} initial={{ opacity: 0, y: 10 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }}>
-              <Card>
-                <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                  <div>
-                    <CardTitle className="text-xl">{exp.role} · {exp.company}</CardTitle>
-                    <p className="text-sm text-muted-foreground">{exp.period}</p>
-                  </div>
-                  <div className="flex flex-wrap gap-2">
-                    {exp.tags.map((t) => (
-                      <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>
-                    ))}
-                  </div>
-                </CardHeader>
-                <CardContent>
-                  <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
-                    {exp.bullets.map((b, idx) => (
-                      <li key={idx}>{b}</li>
-                    ))}
-                  </ul>
-                </CardContent>
-              </Card>
-            </motion.div>
-          ))}
-        </div>
-      </Section>
 
-      <Section id="projects" title="Projects" subtitle="Selected things I built or contributed to.">
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {PROJECTS.map((p) => (
-            <Card key={p.title} className="group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5">
-              <CardHeader>
-                <CardTitle className="text-lg">{p.title}</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <p className="text-sm text-muted-foreground min-h-[54px]">{p.description}</p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {p.tags.map((t) => (
-                    <Badge key={t} variant="secondary" className="text-xs">{t}</Badge>
-                  ))}
+        {/* Hero */}
+        <section className="relative overflow-hidden border-b">
+          <Container>
+            <div className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-20">
+              {/* Left column */}
+              <motion.div
+                  initial={{opacity: 0, y: 12}}
+                  animate={{opacity: 1, y: 0}}
+                  transition={{duration: 0.6}}
+              >
+                <div
+                    className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-muted-foreground">
+                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"/>{" "}
+                  Open to work from Nov 2025
                 </div>
-                <a href={p.link} target="_blank" rel="noreferrer" className="mt-4 inline-flex items-center text-sm">
-                  Visit <ExternalLink className="ml-1 h-4 w-4"/>
-                </a>
+                <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+                  {PROFILE.name}
+                </h1>
+                <p className="mt-2 text-xl text-muted-foreground">{PROFILE.role}</p>
+                <p className="mt-4 max-w-prose leading-relaxed text-muted-foreground">
+                  {PROFILE.summary}
+                </p>
+                <div className="mt-6 flex flex-wrap gap-3">
+                  <a href={PROFILE.links.github} target="_blank" rel="noreferrer">
+                    <Button variant="outline">
+                      <Github className="mr-2 h-4 w-4"/>
+                      GitHub
+                    </Button>
+                  </a>
+                  <a href={PROFILE.links.linkedin} target="_blank" rel="noreferrer">
+                    <Button variant="outline">
+                      <Linkedin className="mr-2 h-4 w-4"/>
+                      LinkedIn
+                    </Button>
+                  </a>
+                  <Button onClick={() => scrollToId("contact")}>
+                    Contact <ArrowRight className="ml-2 h-4 w-4"/>
+                  </Button>
+                </div>
+                <div className="mt-4 text-sm text-muted-foreground">
+                  <span className="mr-3">{PROFILE.location}</span>•
+                  <span className="ml-3">{PROFILE.email}</span>
+                </div>
+              </motion.div>
+
+              {/* Right column — Avatar + What I do */}
+              <motion.div
+                  className="relative flex flex-col items-center gap-6"
+                  initial={{opacity: 0, y: 12}}
+                  animate={{opacity: 1, y: 0}}
+                  transition={{duration: 0.6, delay: 0.1}}
+              >
+                {/* Avatar */}
+                <img
+                    src="/profilepic.jpeg" // put your image in /public
+                    alt={PROFILE.name}
+                    className="w-48 h-48 rounded-full object-cover border-4 border-background shadow-lg"
+                />
+
+                {/* What I do */}
+                <Card className="relative w-full overflow-hidden">
+                  <CardHeader>
+                    <CardTitle className="text-lg">What I do</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    {/* Icon grid */}
+                    <div className="grid grid-cols-2 gap-4">
+                      {heroIcons.map(({Icon, label}, idx) => (
+                          <motion.div
+                              key={label}
+                              className="rounded-2xl border p-4 grid place-items-center text-center"
+                              initial={{opacity: 0, y: 8}}
+                              whileInView={{opacity: 1, y: 0}}
+                              viewport={{once: true}}
+                              transition={{delay: idx * 0.05}}
+                          >
+                            <Icon className="h-6 w-6 mb-2"/>
+                            <div className="text-sm font-medium">{label}</div>
+                          </motion.div>
+                      ))}
+                    </div>
+
+                    {/* Quick facts */}
+                    <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
+                      {[
+                        {k: "Experience", v: "DevSecOps, AppSec, Cloud"},
+                        {k: "Strength", v: "Policy-as-Code & CI/CD"},
+                        {k: "Currently", v: "Open from Nov ’25"},
+                      ].map((item) => (
+                          <div
+                              key={item.k}
+                              className="rounded-xl border px-3 py-2 text-sm"
+                          >
+                            <div className="font-medium">{item.k}</div>
+                            <div className="text-muted-foreground">{item.v}</div>
+                          </div>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+              </motion.div>
+            </div>
+          </Container>
+        </section>
+
+        {/* About */}
+        <Section id="about" title="About" subtitle="Quick snapshot of who I am and how I work.">
+          <div className="grid gap-6 md:grid-cols-3">
+            <Card>
+              <CardHeader>
+                <CardTitle>Principles</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <p>Security-by-default • Infrastructure-as-Code • Everything tests.</p>
+                <p>Automate the boring parts. Measure, iterate, improve.</p>
               </CardContent>
             </Card>
-          ))}
-        </div>
-      </Section>
+            <Card>
+              <CardHeader>
+                <CardTitle>Highlights</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-2 text-sm text-muted-foreground">
+                <ul className="list-disc pl-5 space-y-2">
+                  <li>Engineered secure, scalable software solutions by integrating Policy-as-Code into the SSDLC.</li>
+                  <li>Enhanced container security through automated compliance checks and vulnerability remediation.
+                  </li>
+                  <li>Combined development and security expertise to deliver tools for continuous monitoring and risk
+                    reduction.
+                  </li>
+                </ul>
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle>Stack</CardTitle>
+              </CardHeader>
+              <CardContent className="flex flex-wrap gap-2">
+                {[
+                  "Python",
+                  "Java",
+                  "Go",
+                  "React",
+                  "FastAPI",
+                  "OPA/Rego",
+                  "AWS",
+                  "Kubernetes",
+                  "GitLab CI",
+                ].map((t) => (
+                    <Badge key={t} variant="secondary" className="px-2 py-1 text-xs">
+                      {t}
+                    </Badge>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
 
-      <Section id="contact" title="Get in touch" subtitle="Happy to connect about security engineering, DevSecOps, or interesting software.">
-        <Card>
-          <CardContent className="pt-6">
-            <div className="grid gap-4 md:grid-cols-3">
-              <a className="rounded-2xl border p-4 hover:bg-muted" href={`mailto:${PROFILE.email}`}>
-                <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5"/>
+        {/* Profile at a glance */}
+        {/* Profile at a glance (stacked like Experience) */}
+        <Section
+            id="profile"
+            title="Profile at a glance"
+            subtitle="Education, publications, skills, and languages."
+        >
+          <div className="space-y-6">
+            {/* Education */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Education</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                {EDUCATION.map((e, i) => (
+                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t" : ""}>
+                      <div className="font-medium text-foreground">{e.degree}</div>
+                      <div className="">{e.detail}</div>
+                      <div className="">{e.period}</div>
+                      <div className="text-xs">{e.school} — {e.location}</div>
+                    </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Scientific Papers */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Scientific Papers</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                {PAPERS.map((p, i) => (
+                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t" : ""}>
+                      <div className="font-medium text-foreground">{p.title}</div>
+                      <div className="">{p.period}</div>
+                      <div className="text-xs">{p.org} — {p.location}</div>
+                    </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Technical Skills */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Technical Skills</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                {TECH_SKILLS.map((s, i) => (
+                    <div key={i} className={i !== 0 ? "pt-3 mt-3 border-t" : ""}>
+                      <span className="font-medium text-foreground">{s.k}: </span>
+                      <span>{s.v}</span>
+                    </div>
+                ))}
+              </CardContent>
+            </Card>
+
+            {/* Soft Skills */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Soft Skills</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                <div className="grid gap-6 md:grid-cols-3">
                   <div>
-                    <div className="font-medium">Email</div>
-                    <div className="text-sm text-muted-foreground">{PROFILE.email}</div>
+                    <div className="font-medium text-foreground mb-1">Core</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {SOFT_SKILLS.soft.map((t, i) => <li key={i}>{t}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground mb-1">Hobbies</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {SOFT_SKILLS.hobbies.map((t, i) => <li key={i}>{t}</li>)}
+                    </ul>
+                  </div>
+                  <div>
+                    <div className="font-medium text-foreground mb-1">Sports</div>
+                    <ul className="list-disc pl-4 space-y-1">
+                      {SOFT_SKILLS.sports.map((t, i) => <li key={i}>{t}</li>)}
+                    </ul>
                   </div>
                 </div>
-              </a>
-              <a className="rounded-2xl border p-4 hover:bg-muted" href={PROFILE.links.linkedin} target="_blank" rel="noreferrer">
-                <div className="flex items-center gap-3">
-                  <Linkedin className="h-5 w-5"/>
-                  <div>
-                    <div className="font-medium">LinkedIn</div>
-                    <div className="text-sm text-muted-foreground">/vedant-bodhe</div>
-                  </div>
+              </CardContent>
+            </Card>
+
+            {/* Languages */}
+            <Card>
+              <CardHeader>
+                <CardTitle>Languages</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                {LANGUAGES.map((l, i) => (
+                    <div key={i}
+                         className={"flex items-center justify-between " + (i !== 0 ? "pt-3 mt-3 border-t" : "")}>
+                      <span className="font-medium text-foreground">{l.name}</span>
+                      <span>{l.level}</span>
+                    </div>
+                ))}
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
+
+
+        {/* Skills */}
+        <Section
+            id="skills"
+            title="Skills"
+            subtitle="A visual snapshot of my current strengths."
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Core Competencies</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[340px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={SKILLS_RADAR} cx="50%" cy="50%" outerRadius="75%">
+                    {/* Softer, circular grid */}
+                    <PolarGrid gridType="circle"/>
+                    {/* Wrap long labels; no tick line */}
+                    <PolarAngleAxis dataKey="subject" tick={<AngleTick/>} tickLine={false}/>
+                    {/* Hide numbers (radius ticks) and axis line */}
+                    <PolarRadiusAxis tick={false} axisLine={false} tickCount={5}/>
+                    {/* Cleaner radar style */}
+                    <Radar
+                        dataKey="A"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        fill="currentColor"
+                        fillOpacity={0.15}
+                        isAnimationActive
+                    />
+                    <Tooltip contentStyle={{borderRadius: 12}}/>
+                  </RadarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Keywords & Tools</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Policy-as-Code",
+                    "SSDLC",
+                    "SBOM",
+                    "Trivy",
+                    "Grype",
+                    "Syft",
+                    "DefectDojo",
+                    "Terraform",
+                    "Helm",
+                    "Prometheus",
+                    "Grafana",
+                    "Git",
+                    "Linux",
+                  ].map((t) => (
+                      <Badge key={t} className="px-2 py-1 text-xs">
+                        {t}
+                      </Badge>
+                  ))}
                 </div>
-              </a>
-              <div className="rounded-2xl border p-4">
-                <div className="flex items-center gap-3">
-                  <Phone className="h-5 w-5"/>
-                  <div>
-                    <div className="font-medium">Phone</div>
-                    <div className="text-sm text-muted-foreground">{PROFILE.phone}</div>
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
+
+        {/* Experience */}
+        <Section
+            id="experience"
+            title="Experience"
+            subtitle="Roles, responsibilities, and impact."
+        >
+          <div className="space-y-6">
+            {EXPERIENCE.map((exp, i) => (
+                <motion.div
+                    key={exp.company + i}
+                    initial={{opacity: 0, y: 10}}
+                    whileInView={{opacity: 1, y: 0}}
+                    viewport={{once: true}}
+                >
+                  <Card>
+                    <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                      <div>
+                        <CardTitle className="text-xl">
+                          {exp.role} · {exp.company}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">{exp.period}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {exp.tags.map((t) => (
+                            <Badge key={t} variant="secondary" className="text-xs">
+                              {t}
+                            </Badge>
+                        ))}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                        {exp.bullets.map((b, idx) => (
+                            <li key={idx}>{b}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Projects */}
+        <Section
+            id="projects"
+            title="Projects"
+            subtitle="Selected things I built or contributed to."
+        >
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {PROJECTS.map((p) => (
+                <Card
+                    key={p.title}
+                    className="group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg">{p.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground min-h-[54px]">
+                      {p.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.tags.map((t) => (
+                          <Badge key={t} variant="secondary" className="text-xs">
+                            {t}
+                          </Badge>
+                      ))}
+                    </div>
+                    <a
+                        href={p.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center text-sm"
+                    >
+                      Visit <ExternalLink className="ml-1 h-4 w-4"/>
+                    </a>
+                  </CardContent>
+                </Card>
+            ))}
+          </div>
+        </Section>
+
+        {/* Contact */}
+        <Section
+            id="contact"
+            title="Get in touch"
+            subtitle="Happy to connect about security engineering, DevSecOps, or interesting software."
+        >
+          <Card>
+            <CardContent className="pt-6">
+              <div className="grid gap-4 md:grid-cols-3">
+                <a
+                    className="rounded-2xl border p-4 hover:bg-muted"
+                    href={`mailto:${PROFILE.email}`}
+                >
+                  <div className="flex items-center gap-3">
+                    <Mail className="h-5 w-5"/>
+                    <div>
+                      <div className="font-medium">Email</div>
+                      <div className="text-sm text-muted-foreground">
+                        {PROFILE.email}
+                      </div>
+                    </div>
                   </div>
-                </div>
+                </a>
+                <a
+                    className="rounded-2xl border p-4 hover:bg-muted"
+                    href={PROFILE.links.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                >
+                  <div className="flex items-center gap-3">
+                    <Linkedin className="h-5 w-5"/>
+                    <div>
+                      <div className="font-medium">LinkedIn</div>
+                      <div className="text-sm text-muted-foreground">
+                        /vedant-bodhe
+                      </div>
+                    </div>
+                  </div>
+                </a>
+
+                {PROFILE.phone && (
+                    <div className="rounded-2xl border p-4">
+                      <div className="flex items-center gap-3">
+                        <Phone className="h-5 w-5"/>
+                        <div>
+                          <div className="font-medium">Phone</div>
+                          <div className="text-sm text-muted-foreground">
+                            {PROFILE.phone}
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                )}
+              </div>
+              <div className="mt-6 text-xs text-muted-foreground">
+                Prefer email first contact. Full CV available on request.
+              </div>
+            </CardContent>
+          </Card>
+        </Section>
+
+        {/* Footer */}
+        <footer className="border-t py-8">
+          <Container>
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+              <div>
+                © {new Date().getFullYear()} {PROFILE.name}. All rights reserved.
+              </div>
+              <div className="flex items-center gap-3">
+                <a
+                    href={PROFILE.links.github}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1"
+                >
+                  <Github className="h-4 w-4"/>
+                  GitHub
+                </a>
+                <a
+                    href={PROFILE.links.linkedin}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="inline-flex items-center gap-1"
+                >
+                  <Linkedin className="h-4 w-4"/>
+                  LinkedIn
+                </a>
+                <a href="#projects" className="inline-flex items-center gap-1">
+                  Projects
+                </a>
               </div>
             </div>
-            <div className="mt-6 text-xs text-muted-foreground">Prefer email first contact. Full CV available on request.</div>
-          </CardContent>
-        </Card>
-      </Section>
+          </Container>
+        </footer>
 
-      <footer className="border-t py-8">
-        <Container>
-          <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
-            <div>© {new Date().getFullYear()} {PROFILE.name}. All rights reserved.</div>
-            <div className="flex items-center gap-3">
-              <a href={PROFILE.links.github} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1"><Github className="h-4 w-4"/>GitHub</a>
-              <a href={PROFILE.links.linkedin} target="_blank" rel="noreferrer" className="inline-flex items-center gap-1"><Linkedin className="h-4 w-4"/>LinkedIn</a>
-              <a href="#projects" className="inline-flex items-center gap-1">Projects</a>
-            </div>
-          </div>
-        </Container>
-      </footer>
-
-      <style>{`
+        {/* Print Styles */}
+        <style>{`
         @media print {
           header, footer, nav, .no-print { display: none !important; }
           section { page-break-inside: avoid; }
@@ -406,6 +833,6 @@ export default function App() {
           .rounded-2xl, .rounded-2xl * { box-shadow: none !important; }
         }
       `}</style>
-    </div>
+      </div>
   );
 }

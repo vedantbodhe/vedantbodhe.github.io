@@ -5,7 +5,7 @@
 :root {
   --radius: 1rem;
 }
-
+.text-invert { @apply text-white dark:text-zinc-950; }
 .dark {
   --tw-bg-opacity: 1;
   background-color: rgb(9 9 11 / var(--tw-bg-opacity));
