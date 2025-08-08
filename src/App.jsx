@@ -284,6 +284,7 @@ export default function App() {
             <nav className="hidden md:flex items-center gap-1">
               {[
                 ["About", "about"],
+                ["Profile at a Glance", "profile"],
                 ["Skills", "skills"],
                 ["Experience", "experience"],
                 ["Projects", "projects"],
@@ -487,15 +488,20 @@ export default function App() {
             {/* Education */}
             <Card>
               <CardHeader>
-                <CardTitle>Education</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight">Education</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
+              <CardContent className="text-sm space-y-4">
                 {EDUCATION.map((e, i) => (
-                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t" : ""}>
-                      <div className="font-medium text-foreground">{e.degree}</div>
-                      <div className="">{e.detail}</div>
-                      <div className="">{e.period}</div>
-                      <div className="text-xs">{e.school} — {e.location}</div>
+                    <div
+                        key={i}
+                        className={i !== 0 ? "pt-4 mt-4 border-t border-border" : ""}
+                    >
+                      <div className="font-semibold text-base text-foreground">{e.degree}</div>
+                      <div className="text-muted-foreground">{e.detail}</div>
+                      <div className="italic text-muted-foreground">{e.period}</div>
+                      <div className="text-xs uppercase tracking-wide text-primary">
+                        {e.school} — {e.location}
+                      </div>
                     </div>
                 ))}
               </CardContent>
@@ -504,14 +510,19 @@ export default function App() {
             {/* Scientific Papers */}
             <Card>
               <CardHeader>
-                <CardTitle>Scientific Papers</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight">Scientific Papers</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
+              <CardContent className="text-sm space-y-4">
                 {PAPERS.map((p, i) => (
-                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t" : ""}>
-                      <div className="font-medium text-foreground">{p.title}</div>
-                      <div className="">{p.period}</div>
-                      <div className="text-xs">{p.org} — {p.location}</div>
+                    <div
+                        key={i}
+                        className={i !== 0 ? "pt-4 mt-4 border-t border-border" : ""}
+                    >
+                      <div className="font-semibold text-base text-foreground">{p.title}</div>
+                      <div className="italic text-muted-foreground">{p.period}</div>
+                      <div className="text-xs uppercase tracking-wide text-primary">
+                        {p.org} — {p.location}
+                      </div>
                     </div>
                 ))}
               </CardContent>
@@ -520,62 +531,266 @@ export default function App() {
             {/* Technical Skills */}
             <Card>
               <CardHeader>
-                <CardTitle>Technical Skills</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight text-black dark:text-white">
+                  Technical Skills
+                </CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                {TECH_SKILLS.map((s, i) => (
-                    <div key={i} className={i !== 0 ? "pt-3 mt-3 border-t" : ""}>
-                      <span className="font-medium text-foreground">{s.k}: </span>
-                      <span>{s.v}</span>
-                    </div>
-                ))}
+
+              <CardContent className="relative">
+                {(() => {
+                  // ---- grouped data (edit freely) ----
+                  const GROUPS = [
+                    { k: "Programming", v: "Python, Java, JavaScript, TypeScript, Rego, Go, R" },
+                    { k: "Frontend", v: "React, React Native, Angular, Vue, Vaadin" },
+                    { k: "Backend", v: "Node.js, npm, Express, Next.js, Django, Flask, FastAPI, Spring Boot, Hibernate" },
+                    { k: "DevOps", v: "CI/CD (GitLab, GitHub, Jenkins, Bitbucket), Ansible, Helm, Docker, Kubernetes, Security Scans (Trivy, Grype, SAST, DAST, DefectDojo)" },
+                    { k: "Databases", v: "MySQL, PostgreSQL, SQLAlchemy, MongoDB, SAP S4/HANA" },
+                    { k: "Cloud & IaC", v: "Terraform, AWS (EC2, Route 53, S3, Lambda, IAM), Azure (ARM, Functions), Kubernetes, FinOps" },
+                    { k: "Policy-as-Code", v: "Open Policy Agent, Kyverno" },
+                    { k: "Observability", v: "Prometheus, Grafana, ELK Stack" },
+                    { k: "AI & ML", v: "OpenAI API, Google Vertex AI, Gemini API, TensorFlow Lite, NumPy, pandas, scikit-learn, Matplotlib, Jupyter, PyTorch" },
+                    { k: "Compliance", v: "ISO/IEC 27001, DB RAIS, BSI IT-Grundschutz, GDPR" },
+                  ];
+
+                  // ---- split only on commas OUTSIDE parentheses ----
+                  function splitSkills(str) {
+                    const res = [];
+                    let cur = "", depth = 0;
+                    for (let ch of str) {
+                      if (ch === "(") depth++;
+                      if (ch === ")") depth--;
+                      if (ch === "," && depth === 0) {
+                        if (cur.trim()) res.push(cur.trim());
+                        cur = "";
+                      } else {
+                        cur += ch;
+                      }
+                    }
+                    if (cur.trim()) res.push(cur.trim());
+                    return res;
+                  }
+
+                  const all = GROUPS.flatMap((g) => splitSkills(g.v));
+
+                  // ---- typewriter state ----
+                  const [idx, setIdx] = React.useState(0);
+                  const [phase, setPhase] = React.useState("typing"); // typing | pause | deleting
+                  const [cursor, setCursor] = React.useState(true);
+                  const current = all[idx % all.length] || "";
+                  const [shown, setShown] = React.useState("");
+
+                  React.useEffect(() => {
+                    const blink = setInterval(() => setCursor((c) => !c), 500);
+                    return () => clearInterval(blink);
+                  }, []);
+
+                  React.useEffect(() => {
+                    let t;
+                    if (phase === "typing") {
+                      t = setTimeout(() => {
+                        if (shown.length < current.length) setShown(current.slice(0, shown.length + 1));
+                        else setPhase("pause");
+                      }, 45);
+                    } else if (phase === "pause") {
+                      t = setTimeout(() => setPhase("deleting"), 800);
+                    } else {
+                      t = setTimeout(() => {
+                        if (shown.length > 0) setShown(current.slice(0, shown.length - 1));
+                        else {
+                          setPhase("typing");
+                          setIdx((i) => i + 1);
+                        }
+                      }, 25);
+                    }
+                    return () => clearTimeout(t);
+                  }, [shown, phase, current]);
+
+                  // ---- visuals ----
+                  const bgDots =
+                      "bg-[radial-gradient(circle_at_1px_1px,theme(colors.zinc.300)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_1px_1px,theme(colors.zinc.700)_1px,transparent_1px)] bg-[length:18px_18px] rounded-2xl p-4 md:p-6 border";
+
+                  const sizeFor = (tag) =>
+                      tag.length <= 4 ? "text-xl md:text-2xl"
+                          : tag.length <= 8 ? "text-lg"
+                              : "text-base";
+
+                  return (
+                      <div className={bgDots}>
+                        {/* Typewriter */}
+                        <div className="mb-6">
+                          <div className="text-sm uppercase tracking-wider text-muted-foreground mb-2">
+                            I have experience with ...
+                          </div>
+                          <div className="font-mono text-lg md:text-xl border rounded-xl px-3 py-2 bg-background/70 backdrop-blur flex items-center">
+                            <span className="text-foreground">{">"}</span>
+                            <span className="ml-2">{shown}</span>
+                            <span className={`ml-1 w-2 ${cursor ? "opacity-100" : "opacity-0"}`}>|</span>
+                          </div>
+                        </div>
+
+                        {/* Categorised cloud */}
+                        <div className="space-y-6">
+                          {GROUPS.map((g, gi) => (
+                              <div key={gi}>
+                                {/* Category title: PURE black/white via theme */}
+                                <div className="mb-2 text-sm font-semibold tracking-wide text-black dark:text-white">
+                                  {g.k}
+                                </div>
+                                <div className="flex flex-wrap gap-2">
+                                  {splitSkills(g.v).map((tag, ti) => {
+                                    const isActive = tag === current;
+                                    return (
+                                        <span
+                                            key={ti}
+                                            className={[
+                                              "inline-flex select-none items-center rounded-xl border px-3 py-1.5 transition-all shadow-sm",
+                                              sizeFor(tag),
+                                              isActive
+                                                  ? "bg-foreground/5 border-foreground/30 text-foreground scale-[1.03]"
+                                                  : "bg-background text-foreground hover:scale-105",
+                                            ].join(" ")}
+                                        >
+                        {tag}
+                      </span>
+                                    );
+                                  })}
+                                </div>
+                              </div>
+                          ))}
+                        </div>
+                      </div>
+                  );
+                })()}
               </CardContent>
             </Card>
+
+
 
             {/* Soft Skills */}
             <Card>
               <CardHeader>
-                <CardTitle>Soft Skills</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight">Soft Skills</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                <div className="grid gap-6 md:grid-cols-3">
-                  <div>
-                    <div className="font-medium text-foreground mb-1">Core</div>
-                    <ul className="list-disc pl-4 space-y-1">
-                      {SOFT_SKILLS.soft.map((t, i) => <li key={i}>{t}</li>)}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground mb-1">Hobbies</div>
-                    <ul className="list-disc pl-4 space-y-1">
-                      {SOFT_SKILLS.hobbies.map((t, i) => <li key={i}>{t}</li>)}
-                    </ul>
-                  </div>
-                  <div>
-                    <div className="font-medium text-foreground mb-1">Sports</div>
-                    <ul className="list-disc pl-4 space-y-1">
-                      {SOFT_SKILLS.sports.map((t, i) => <li key={i}>{t}</li>)}
-                    </ul>
-                  </div>
-                </div>
+
+              <CardContent className="text-sm">
+                {(() => {
+                  const CORE = [
+                    { label: "Self-driven initiative", icon: "🚀" },
+                    { label: "Team communication", icon: "💬" },
+                    { label: "Multilingual proficiency", icon: "🌍" },
+                    { label: "Adaptability (agile)", icon: "⚡" },
+                  ];
+
+                  const HOBBIES = [
+                    { label: "Learning new tech", icon: "💻" },
+                    { label: "Board & video games", icon: "🎮" },
+                    { label: "Music production", icon: "🎵" },
+                    { label: "Travelling", icon: "✈️" },
+                  ];
+
+                  const SPORTS = [
+                    { label: "Fitness", icon: "🏋️‍♂️" },
+                    { label: "Badminton", icon: "🏸" },
+                    { label: "Football", icon: "⚽" },
+                    { label: "Bike-riding", icon: "🚴‍♂️" },
+                    { label: "Hiking", icon: "🥾" },
+                  ];
+
+                  const Chip = ({ text, icon }) => (
+                      <span className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 bg-background text-foreground">
+          <span aria-hidden>{icon}</span> {text}
+        </span>
+                  );
+
+                  const Section = ({ title, items }) => (
+                      <div>
+                        <div className="mb-2 font-medium text-foreground">{title}</div>
+                        <div className="flex flex-wrap gap-2">
+                          {items.map((item, i) => (
+                              <Chip key={i} text={item.label} icon={item.icon} />
+                          ))}
+                        </div>
+                      </div>
+                  );
+
+                  return (
+                      <div className="space-y-6">
+                        <Section title="Core" items={CORE} />
+                        <Section title="Hobbies" items={HOBBIES} />
+                        <Section title="Sports" items={SPORTS} />
+                      </div>
+                  );
+                })()}
               </CardContent>
             </Card>
+
+
 
             {/* Languages */}
             <Card>
               <CardHeader>
-                <CardTitle>Languages</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight">Languages</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm text-muted-foreground">
-                {LANGUAGES.map((l, i) => (
-                    <div key={i}
-                         className={"flex items-center justify-between " + (i !== 0 ? "pt-3 mt-3 border-t" : "")}>
-                      <span className="font-medium text-foreground">{l.name}</span>
-                      <span>{l.level}</span>
-                    </div>
-                ))}
+
+              <CardContent>
+                {(() => {
+                  // Define levels (0–100) + flag emoji
+                  const LANG = [
+                    { name: "German (DSH-2 / C1)", level: 85, flag: "🇩🇪", label: "Fluent" },
+                    { name: "English (IELTS 8.0)", level: 95, flag: "🇬🇧", label: "Near-native" },
+                    { name: "Marathi", level: 100, flag: "🇮🇳", label: "Native" },
+                    { name: "Hindi", level: 100, flag: "🇮🇳", label: "Native" },
+                  ];
+
+                  // Simple circular progress (SVG)
+                  const Ring = ({ pct = 80 }) => {
+                    const R = 28; // radius
+                    const C = 2 * Math.PI * R;
+                    const dash = Math.max(0, Math.min(C, (pct / 100) * C));
+                    return (
+                        <svg width="72" height="72" viewBox="0 0 72 72" className="shrink-0">
+                          <circle cx="36" cy="36" r={R} stroke="currentColor" strokeOpacity="0.15" strokeWidth="6" fill="none" />
+                          <circle
+                              cx="36"
+                              cy="36"
+                              r={R}
+                              stroke="currentColor"
+                              strokeWidth="6"
+                              fill="none"
+                              strokeDasharray={`${dash} ${C - dash}`}
+                              strokeLinecap="round"
+                              style={{ transform: "rotate(-90deg)", transformOrigin: "36px 36px" }}
+                          />
+                        </svg>
+                    );
+                  };
+
+                  return (
+                      <div className="grid gap-4 sm:grid-cols-2">
+                        {LANG.map((l, i) => (
+                            <div
+                                key={l.name + i}
+                                className="flex items-center gap-4 rounded-xl border p-3 md:p-4 bg-background hover:shadow-sm transition"
+                            >
+                              <div className="relative">
+                                <Ring pct={l.level} />
+                                <div className="absolute inset-0 grid place-items-center">
+                                  <span className="text-2xl" aria-hidden>{l.flag}</span>
+                                </div>
+                              </div>
+                              <div className="min-w-0">
+                                <div className="font-medium text-foreground truncate">{l.name}</div>
+                                <div className="text-xs text-muted-foreground">{l.label}</div>
+                              </div>
+                              <div className="ml-auto text-sm text-muted-foreground">{l.level}%</div>
+                            </div>
+                        ))}
+                      </div>
+                  );
+                })()}
               </CardContent>
             </Card>
+
           </div>
         </Section>
 
