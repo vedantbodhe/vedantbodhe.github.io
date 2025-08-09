@@ -129,25 +129,25 @@ const EXPERIENCE = [
 
 const PROJECTS = [
   {
-    title: "Policy-as-Code Playground",
+    title: "Strong Password Generator standalone App",
     description:
-        "Evaluate Rego policies live, with GitLab/GitHub inputs and result diffs.",
-    link: "https://example.com/pac-playground",
-    tags: ["Go", "OPA", "React", "Vite"],
+        "A sleek desktop password generator with cryptographically secure randomness and a built‑in encrypted vault (AES‑GCM) to save generated passwords locally.",
+    link: "https://github.com/vedantbodhe/StrongPasswordGenerator",
+    tags: ["Python", "Cryptography", "Tkinter", "Scripting"],
   },
   {
-    title: "Container Compliance Scanner",
+    title: "Java based Secure Code Playground ",
     description:
-        "Docker image scanner with SBOM, Trivy/Grype, and dashboard UI.",
-    link: "https://example.com/compliance-scanner",
-    tags: ["Python", "FastAPI", "React"],
+        "A full-stack web application for real-time Java static code analysis using PMD to detect security issues, code smells, and best-practice violations.",
+    link: "https://github.com/vedantbodhe/secure-code-playground",
+    tags: ["Java", "Spring Boot", "Secure Programming"],
   },
   {
-    title: "Damage Reporter AI",
+    title: "Report my Damage!",
     description:
-        "FastAPI + Vision AI prototype to triage and email incident reports.",
-    link: "https://example.com/damage-reporter",
-    tags: ["FastAPI", "OpenAI", "Email"],
+        "Python FastAPI + OpenAI Vision API + AWS prototype to triage and email damaged packet incident reports.",
+    link: "https://github.com/vedantbodhe/damage-report-app",
+    tags: ["Python FastAPI", "OpenAI", "AWS"],
   },
 ];
 
@@ -907,8 +907,8 @@ export default function App() {
         {/* Projects */}
         <Section
             id="projects"
-            title="Projects"
-            subtitle="Selected things I built or contributed to."
+            title="Featured Projects"
+            subtitle="Some of my featured projects. More on my Github!"
         >
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {PROJECTS.map((p) => (
@@ -948,7 +948,7 @@ export default function App() {
         <Section
             id="contact"
             title="Get in touch"
-            subtitle="Happy to connect about security engineering, DevSecOps, or interesting software."
+            subtitle="Happy to connect about software engineering, security engineering, DevOps, or AI development topics."
         >
           <Card>
             <CardContent className="pt-6">
