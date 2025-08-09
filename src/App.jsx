@@ -407,9 +407,9 @@ export default function App() {
                     {/* Quick facts */}
                     <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {[
-                        {k: "Experience", v: "DevSecOps, AppSec, Cloud"},
-                        {k: "Strength", v: "Policy-as-Code & CI/CD"},
-                        {k: "Currently", v: "Open from Nov ’25"},
+                        {k: "Experience", v: "Security, Software Dev, Cloud, AI"},
+                        {k: "Strength", v: "Secure Programming, DevSecOps"},
+                        {k: "Currently at", v: "Deutsche Bahn. Open to new opportunities from Nov ’25"},
                       ].map((item) => (
                           <div
                               key={item.k}
