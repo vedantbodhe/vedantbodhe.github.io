@@ -286,10 +286,10 @@ export default function App() {
             <nav className="hidden md:flex items-center gap-1">
               {[
                 ["About", "about"],
-                ["Profile at a Glance", "profile"],
                 ["Skills", "skills"],
                 ["Experience", "experience"],
                 ["Projects", "projects"],
+                ["Profile at a Glance", "profile"],
                 ["Contact", "contact"],
               ].map(([label, id]) => (
                   <Button
