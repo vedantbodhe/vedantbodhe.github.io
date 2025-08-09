@@ -116,12 +116,14 @@ const EXPERIENCE = [
     tags: ["Python", "R", "SAP", "Data Quality"],
   },
   {
-    role: "Werkstudent – Partner Ecosystems Success",
+    role: "Working Student – Partner Ecosystems Success",
     company: "SAP SE",
     period: "May 2022 – Oct 2022",
     bullets: [
-      "Reporting & analysis for software partner solutions.",
-      "Worked in an international, English-speaking team.",
+      "Worked in the SAP Partner Ecosystems Success team for MEE region.",
+      "Part of an International and Multi-cultural motivated team based in Europe",
+      "Daily/Weekly Production of Sales Pipeline Reports",
+      "Gained quality experience and knowledge in SAP Analytical Tools and SAP based software solutions"
     ],
     tags: ["Data", "Analytics", "Communication"],
   },
@@ -180,8 +182,8 @@ const PAPERS = [
   {
     title:
         "Facilitating Shift-Left Security using Policy-as-Code in the SSDLC: A Deutsche Bahn InfraGO Case Study",
-    period: "2025 (Bachelor Thesis)",
-    org: "DB InfraGO & Hochschule Fulda",
+    period: "2025",
+    org: "Deutsche Bahn InfraGO & Hochschule Fulda (Bachelor Thesis)",
     location: "Frankfurt am Main & Fulda, Germany",
   },
 ];
@@ -474,6 +476,156 @@ export default function App() {
                 ))}
               </CardContent>
             </Card>
+          </div>
+        </Section>
+
+        {/* Skills */}
+        <Section
+            id="skills"
+            title="Skills"
+            subtitle="A visual snapshot of my current strengths."
+        >
+          <div className="grid gap-6 md:grid-cols-2">
+            <Card>
+              <CardHeader>
+                <CardTitle>Core Competencies</CardTitle>
+              </CardHeader>
+              <CardContent className="h-[340px]">
+                <ResponsiveContainer width="100%" height="100%">
+                  <RadarChart data={SKILLS_RADAR} cx="50%" cy="50%" outerRadius="75%">
+                    {/* Softer, circular grid */}
+                    <PolarGrid gridType="circle"/>
+                    {/* Wrap long labels; no tick line */}
+                    <PolarAngleAxis dataKey="subject" tick={<AngleTick/>} tickLine={false}/>
+                    {/* Hide numbers (radius ticks) and axis line */}
+                    <PolarRadiusAxis tick={false} axisLine={false} tickCount={5}/>
+                    {/* Cleaner radar style */}
+                    <Radar
+                        dataKey="A"
+                        stroke="currentColor"
+                        strokeWidth={2}
+                        fill="currentColor"
+                        fillOpacity={0.15}
+                        isAnimationActive
+                    />
+                    <Tooltip contentStyle={{borderRadius: 12}}/>
+                  </RadarChart>
+                </ResponsiveContainer>
+              </CardContent>
+            </Card>
+
+            <Card>
+              <CardHeader>
+                <CardTitle>Keywords & Tools</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div className="flex flex-wrap gap-2">
+                  {[
+                    "Python",
+                    "Java",
+                    "JavaScript",
+                    "Vulnerability Scanning",
+                    "Data Analysis",
+                    "Secure Programming",
+                    "Cloud Computing",
+                    "Web Development",
+                    "DevOps",
+                    "DevSecOps",
+                    "Artificial Intelligence",
+                    "Machine Learning ",
+                    "Git",
+                    "Linux",
+                  ].map((t) => (
+                      <Badge key={t} className="px-2 py-1 text-xs">
+                        {t}
+                      </Badge>
+                  ))}
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+        </Section>
+
+        {/* Experience */}
+        <Section
+            id="experience"
+            title="Experience"
+            subtitle="Roles, responsibilities, and impact."
+        >
+          <div className="space-y-6">
+            {EXPERIENCE.map((exp, i) => (
+                <motion.div
+                    key={exp.company + i}
+                    initial={{opacity: 0, y: 10}}
+                    whileInView={{opacity: 1, y: 0}}
+                    viewport={{once: true}}
+                >
+                  <Card>
+                    <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+                      <div>
+                        <CardTitle className="text-xl">
+                          {exp.role} · {exp.company}
+                        </CardTitle>
+                        <p className="text-sm text-muted-foreground">{exp.period}</p>
+                      </div>
+                      <div className="flex flex-wrap gap-2">
+                        {exp.tags.map((t) => (
+                            <Badge key={t} variant="secondary" className="text-xs">
+                              {t}
+                            </Badge>
+                        ))}
+                      </div>
+                    </CardHeader>
+                    <CardContent>
+                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                        {exp.bullets.map((b, idx) => (
+                            <li key={idx}>{b}</li>
+                        ))}
+                      </ul>
+                    </CardContent>
+                  </Card>
+                </motion.div>
+            ))}
+          </div>
+        </Section>
+
+        {/* Projects */}
+        <Section
+            id="projects"
+            title="Featured Projects"
+            subtitle="Some of my featured projects. More on my Github!"
+        >
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+            {PROJECTS.map((p) => (
+                <Card
+                    key={p.title}
+                    className="group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5"
+                >
+                  <CardHeader>
+                    <CardTitle className="text-lg">{p.title}</CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <p className="text-sm text-muted-foreground min-h-[54px]">
+                      {p.description}
+                    </p>
+                    <div className="mt-4 flex flex-wrap gap-2">
+                      {p.tags.map((t) => (
+                          <Badge key={t} variant="secondary" className="text-xs">
+                            {t}
+                          </Badge>
+                      ))}
+                    </div>
+                    <a
+                        href={p.link}
+                        target="_blank"
+                        rel="noreferrer"
+                        className="mt-4 inline-flex items-center text-sm"
+                    >
+                      Visit <ExternalLink className="ml-1 h-4 w-4"/>
+                    </a>
+                  </CardContent>
+                </Card>
+            ))}
           </div>
         </Section>
 
@@ -795,154 +947,7 @@ export default function App() {
         </Section>
 
 
-        {/* Skills */}
-        <Section
-            id="skills"
-            title="Skills"
-            subtitle="A visual snapshot of my current strengths."
-        >
-          <div className="grid gap-6 md:grid-cols-2">
-            <Card>
-              <CardHeader>
-                <CardTitle>Core Competencies</CardTitle>
-              </CardHeader>
-              <CardContent className="h-[340px]">
-                <ResponsiveContainer width="100%" height="100%">
-                  <RadarChart data={SKILLS_RADAR} cx="50%" cy="50%" outerRadius="75%">
-                    {/* Softer, circular grid */}
-                    <PolarGrid gridType="circle"/>
-                    {/* Wrap long labels; no tick line */}
-                    <PolarAngleAxis dataKey="subject" tick={<AngleTick/>} tickLine={false}/>
-                    {/* Hide numbers (radius ticks) and axis line */}
-                    <PolarRadiusAxis tick={false} axisLine={false} tickCount={5}/>
-                    {/* Cleaner radar style */}
-                    <Radar
-                        dataKey="A"
-                        stroke="currentColor"
-                        strokeWidth={2}
-                        fill="currentColor"
-                        fillOpacity={0.15}
-                        isAnimationActive
-                    />
-                    <Tooltip contentStyle={{borderRadius: 12}}/>
-                  </RadarChart>
-                </ResponsiveContainer>
-              </CardContent>
-            </Card>
 
-            <Card>
-              <CardHeader>
-                <CardTitle>Keywords & Tools</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="flex flex-wrap gap-2">
-                  {[
-                    "Policy-as-Code",
-                    "SSDLC",
-                    "SBOM",
-                    "Trivy",
-                    "Grype",
-                    "Syft",
-                    "DefectDojo",
-                    "Terraform",
-                    "Helm",
-                    "Prometheus",
-                    "Grafana",
-                    "Git",
-                    "Linux",
-                  ].map((t) => (
-                      <Badge key={t} className="px-2 py-1 text-xs">
-                        {t}
-                      </Badge>
-                  ))}
-                </div>
-              </CardContent>
-            </Card>
-          </div>
-        </Section>
-
-        {/* Experience */}
-        <Section
-            id="experience"
-            title="Experience"
-            subtitle="Roles, responsibilities, and impact."
-        >
-          <div className="space-y-6">
-            {EXPERIENCE.map((exp, i) => (
-                <motion.div
-                    key={exp.company + i}
-                    initial={{opacity: 0, y: 10}}
-                    whileInView={{opacity: 1, y: 0}}
-                    viewport={{once: true}}
-                >
-                  <Card>
-                    <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
-                      <div>
-                        <CardTitle className="text-xl">
-                          {exp.role} · {exp.company}
-                        </CardTitle>
-                        <p className="text-sm text-muted-foreground">{exp.period}</p>
-                      </div>
-                      <div className="flex flex-wrap gap-2">
-                        {exp.tags.map((t) => (
-                            <Badge key={t} variant="secondary" className="text-xs">
-                              {t}
-                            </Badge>
-                        ))}
-                      </div>
-                    </CardHeader>
-                    <CardContent>
-                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
-                        {exp.bullets.map((b, idx) => (
-                            <li key={idx}>{b}</li>
-                        ))}
-                      </ul>
-                    </CardContent>
-                  </Card>
-                </motion.div>
-            ))}
-          </div>
-        </Section>
-
-        {/* Projects */}
-        <Section
-            id="projects"
-            title="Featured Projects"
-            subtitle="Some of my featured projects. More on my Github!"
-        >
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-            {PROJECTS.map((p) => (
-                <Card
-                    key={p.title}
-                    className="group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5"
-                >
-                  <CardHeader>
-                    <CardTitle className="text-lg">{p.title}</CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground min-h-[54px]">
-                      {p.description}
-                    </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {p.tags.map((t) => (
-                          <Badge key={t} variant="secondary" className="text-xs">
-                            {t}
-                          </Badge>
-                      ))}
-                    </div>
-                    <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 inline-flex items-center text-sm"
-                    >
-                      Visit <ExternalLink className="ml-1 h-4 w-4"/>
-                    </a>
-                  </CardContent>
-                </Card>
-            ))}
-          </div>
-        </Section>
 
         {/* Contact */}
         <Section
