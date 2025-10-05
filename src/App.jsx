@@ -158,7 +158,8 @@ const EDUCATION = [
   {
     degree: "B.Sc. International Science and Engineering",
     detail: "Specialization: Applied Computer Science",
-    period: "Oct 2021 – Oct 2025 (planned graduation end of Sep 2025)",
+    thesis: "Facilitating Shift-Left Security using Policy-as-Code in the SSDLC : A Deutsche Bahn Case Study (Note/Grade: 1,0)",
+    period: "Oct 2021 – Oct 2025",
     school: "Hochschule Fulda",
     location: "Fulda, Germany",
   },
@@ -650,6 +651,7 @@ export default function App() {
                     >
                       <div className="font-semibold text-base text-foreground">{e.degree}</div>
                       <div className="text-muted-foreground">{e.detail}</div>
+                      <div className="text-muted-foreground">{e.thesis}</div>
                       <div className="italic text-muted-foreground">{e.period}</div>
                       <div className="text-xs uppercase tracking-wide text-primary">
                         {e.school} — {e.location}
@@ -888,8 +890,8 @@ export default function App() {
                 {(() => {
                   // Define levels (0–100) + flag emoji
                   const LANG = [
-                    { name: "German (DSH-2 / C1)", level: 85, flag: "🇩🇪", label: "Fluent" },
-                    { name: "English (IELTS 8.0)", level: 95, flag: "🇬🇧", label: "Near-native" },
+                    { name: "German (DSH-2 / C1)", level: 90, flag: "🇩🇪", label: "Fluent" },
+                    { name: "English (IELTS 8.0)", level: 100, flag: "🇬🇧", label: "Near-native" },
                     { name: "Marathi", level: 100, flag: "🇮🇳", label: "Native" },
                     { name: "Hindi", level: 100, flag: "🇮🇳", label: "Native" },
                   ];
