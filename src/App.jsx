@@ -335,7 +335,7 @@ export default function App() {
                 <div
                     className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-muted-foreground">
                   <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"/>{" "}
-                  Open to work from Nov 2025
+                  Currently working as Identity & Access Management Engineer
                 </div>
                 <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
                   {PROFILE.name}
@@ -409,7 +409,7 @@ export default function App() {
                       {[
                         {k: "Experience", v: "Security, Software Dev, Cloud, AI"},
                         {k: "Strength", v: "Secure Programming, DevSecOps"},
-                        {k: "Currently at", v: "Deutsche Bahn. Open to new opportunities from Nov ’25"},
+                        {k: "Currently working as", v: "IAM (Security) Engineer at Hochschule Fulda"},
                       ].map((item) => (
                           <div
                               key={item.k}
