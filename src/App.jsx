@@ -158,7 +158,7 @@ const EDUCATION = [
   {
     degree: "B.Sc. International Science and Engineering",
     detail: "Specialization: Applied Computer Science",
-    thesis: "Facilitating Shift-Left Security using Policy-as-Code in the SSDLC : A Deutsche Bahn Case Study (Note/Grade: 1,0)",
+    thesis: "Thesis: Facilitating Shift-Left Security using Policy-as-Code in the SSDLC : A Deutsche Bahn InfraGO Case Study (Note/Grade: 1,0)",
     period: "Oct 2021 – Oct 2025",
     school: "Hochschule Fulda",
     location: "Fulda, Germany",
