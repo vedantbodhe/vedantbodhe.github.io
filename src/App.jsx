@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import {
   Github,
@@ -12,9 +12,16 @@ import {
   ArrowRight,
   Code,
   Shield,
-  Zap,
   Cloud,
   TerminalSquare,
+  Globe,
+  UserCheck,
+  Server,
+  Database,
+  Cpu,
+  CheckCircle2,
+  Lock,
+  Activity
 } from "lucide-react";
 import {
   Tooltip,
@@ -29,6 +36,17 @@ import { Button } from "./components/ui/Button";
 import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/Card";
 import { Badge } from "./components/ui/Badge";
 
+// --- THEME UTILS ---
+const BackgroundGrid = () => (
+    <div className="fixed inset-0 z-[-1] pointer-events-none bg-[#020617]">
+      {/* Deep Navy/Black Background */}
+      <div className="absolute inset-0 bg-[linear-gradient(to_right,#1e293b_1px,transparent_1px),linear-gradient(to_bottom,#1e293b_1px,transparent_1px)] bg-[size:32px_32px] opacity-[0.1]"></div>
+      {/* Glowing Orbs */}
+      <div className="absolute top-0 left-0 w-[500px] h-[500px] bg-blue-600/10 blur-[120px] rounded-full mix-blend-screen animate-pulse"></div>
+      <div className="absolute bottom-0 right-0 w-[500px] h-[500px] bg-cyan-600/10 blur-[120px] rounded-full mix-blend-screen"></div>
+    </div>
+);
+
 const Container = ({ children, className = "" }) => (
     <div className={`mx-auto w-full max-w-7xl px-4 md:px-6 ${className}`}>
       {children}
@@ -36,61 +54,66 @@ const Container = ({ children, className = "" }) => (
 );
 
 const Section = ({ id, title, subtitle, children }) => (
-    <section id={id} className="scroll-mt-24 py-10 md:py-16">
+    <section id={id} className="scroll-mt-24 py-12 md:py-24 relative">
       <Container>
         <motion.div
-            initial={{ opacity: 0, y: 12 }}
+            initial={{ opacity: 0, y: 20 }}
             whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true }}
+            viewport={{ once: true, margin: "-100px" }}
             transition={{ duration: 0.5 }}
         >
-          <h2 className="text-3xl md:text-4xl font-bold tracking-tight">{title}</h2>
+          <div className="flex items-center gap-3 mb-3">
+            <div className="h-1 w-10 bg-cyan-500 rounded-full shadow-[0_0_10px_rgba(6,182,212,0.5)]"></div>
+            <h2 className="text-3xl md:text-4xl font-bold tracking-tight text-white">{title}</h2>
+          </div>
           {subtitle && (
-              <p className="mt-2 text-muted-foreground max-w-2xl">{subtitle}</p>
+              <p className="mt-2 text-slate-400 max-w-2xl text-lg">{subtitle}</p>
           )}
-          <div className="mt-6">{children}</div>
+          <div className="mt-10">{children}</div>
         </motion.div>
       </Container>
     </section>
 );
 
+// --- DATA ---
 const PROFILE = {
   name: "Vedant Vinayak Bodhe",
-  role: "Security Engineer • Analyst • Software Engineer (DevOps)",
+  role: "IAM Engineer • Security Engineer • Software Engineer (DevOps)",
   summary:
       "Dedicated Applied Computer Science student with a passion for software development, IT security, and engineering. I strive to develop innovative and sustainable software solutions and design secure, efficient IT infrastructures that optimally support business processes.",
   location: "Fulda, Germany",
   email: "vedantbodhe@gmail.com",
-  // phone: "+49 000 0000000", // optional — if set, the Phone card will show
+  phone: "+49 000 0000000",
   links: {
     github: "https://github.com/vedantbodhe",
     linkedin: "https://www.linkedin.com/in/vedant-bodhe/",
     portfolio: "#projects",
   },
+  avatarUrl: "/profilepic.jpeg"
 };
 
 const SKILLS_RADAR = [
-  { subject: "Programming", A: 85 },
-  { subject: "Security Engineering", A: 85 },
-  { subject: "Network Administration", A: 80 },
-  { subject: "Cloud Computing", A: 70 },
-  { subject: "Project Planning and Consulting", A: 70 },
-  { subject: "AI", A: 70 },
+  { subject: "IAM", A: 95, fullMark: 100 },
+  { subject: "Security Eng.", A: 85, fullMark: 100 },
+  { subject: "Programming", A: 80, fullMark: 100 },
+  { subject: "Cloud Computing", A: 70, fullMark: 100 },
+  { subject: "Consulting", A: 70, fullMark: 100 },
+  { subject: "AI", A: 70, fullMark: 100 },
 ];
 
-const AngleTick = ({ payload, x, y, textAnchor }) => {
-  const words = String(payload?.value ?? "").split(" ");
-  return (
-      <text x={x} y={y} textAnchor={textAnchor} fontSize={11} fill="currentColor">
-        {words.map((w, i) => (
-            <tspan key={i} x={x} dy={i === 0 ? 0 : 12}>{w}</tspan>
-        ))}
-      </text>
-  );
-};
-
-
 const EXPERIENCE = [
+  {
+    role: "Identity and Access Management (IAM) Engineer",
+    company: "Hochschule Fulda",
+    period: "Dec 2025 – Present",
+    bullets: [
+      "Designing, implementing, and continuously improving centralized Identity & Access Management solutions (OpenText Identity Manager, Microsoft Entra ID).",
+      "Developing technical IAM concepts including role, entitlement, and provisioning models for on-premises and cloud services (M365).",
+      "Operating, administering, and supporting Microsoft 365 and Entra ID environments.",
+      "Developing and integrating custom Python-based interfaces and automation solutions for heterogeneous ICT systems."
+    ],
+    tags: ["Entra ID", "OpenText", "Python", "M365", "Identity Mgmt"],
+  },
   {
     role: "Internship : Security & Quality Engineering",
     company: "Deutsche Bahn InfraGO",
@@ -153,7 +176,6 @@ const PROJECTS = [
   },
 ];
 
-/* === New data: Education, Papers, Skills, Soft Skills, Languages === */
 const EDUCATION = [
   {
     degree: "B.Sc. International Science and Engineering",
@@ -189,76 +211,16 @@ const PAPERS = [
   },
 ];
 
-const TECH_SKILLS = [
-  { k: "Programming", v: "Python, Java, JavaScript, TypeScript, Rego, Go, R" },
-  { k: "Frontend", v: "React, React Native, Angular, Vue, Vaadin" },
-  {
-    k: "Backend",
-    v: "Node.js, npm, Express, Next.js, Django, Flask, FastAPI, Spring Boot, Hibernate",
-  },
-  {
-    k: "DevOps",
-    v: "CI/CD (GitLab/GitHub/Jenkins/Bitbucket), Ansible, Helm, Docker & Kubernetes, Security Scans (Trivy, Grype, SAST, DAST, DefectDojo)",
-  },
-  { k: "Databases", v: "MySQL, PostgreSQL, SQLAlchemy, MongoDB, SAP S/4HANA" },
-  {
-    k: "Tools",
-    v: "Git, WSL (Ubuntu), VS Code, IntelliJ, Eclipse, JIRA, Confluence, Docker, Podman, OpenShift, Azure, MS 365",
-  },
-  {
-    k: "Cloud & IaC",
-    v: "Terraform, AWS (EC2, Elastic Beanstalk, Route 53, S3, Lambda, IAM), Azure (ARM, Functions), Kubernetes, GitLab CI/CD, FinOps",
-  },
-  { k: "Policy-as-Code", v: "Open Policy Agent, Kyverno" },
-  { k: "Observability", v: "Prometheus, Grafana, ELK (Elasticsearch, Logstash, Kibana)" },
-  { k: "AI Platforms", v: "OpenAI Vision/API, Google Vertex AI, Gemini API, TensorFlow Lite" },
-  { k: "ML", v: "NumPy, pandas, scikit-learn, Matplotlib, Jupyter, PyTorch" },
-  {
-    k: "Compliance",
-    v: "ISO/IEC 27001, DB RAIS, BSI IT-Grundschutz, GDPR (ethical application throughout lifecycle)",
-  },
-];
-
-const SOFT_SKILLS = {
-  soft: [
-    "Self-driven initiative",
-    "Communicative in team processes",
-    "Multilingual proficiency",
-    "Rapid adaptability in agile teams",
-  ],
-  hobbies: [
-    "Learning new programming languages & technologies",
-    "Board & video games",
-    "Music production",
-    "Travelling",
-  ],
-  sports: ["Fitness", "Badminton", "Football", "Bike-riding", "Hiking"],
-};
-
-const LANGUAGES = [
-  { name: "German (DSH-2 / C1)", level: "Fluent" },
-  { name: "English (IELTS 8.0)", level: "Fluent / near-native" },
-  { name: "Marathi", level: "Native" },
-  { name: "Hindi", level: "Native" },
-];
-
-const useTheme = () => {
-  const [dark, setDark] = useState(true);
-  React.useEffect(() => {
-    const root = document.documentElement;
-    if (dark) root.classList.add("dark");
-    else root.classList.remove("dark");
-  }, [dark]);
-  return { dark, setDark };
-};
-
 const scrollToId = (id) => {
   const el = document.getElementById(id);
   if (el) el.scrollIntoView({ behavior: "smooth", block: "start" });
 };
 
 export default function App() {
-  const { dark, setDark } = useTheme();
+  const [dark, setDark] = useState(true);
+  useEffect(() => {
+    document.documentElement.classList.add("dark");
+  }, []);
 
   const heroIcons = useMemo(
       () => [
@@ -271,32 +233,34 @@ export default function App() {
   );
 
   return (
-      <div className="min-h-screen bg-background text-foreground">
+      <div className="min-h-screen bg-[#020617] text-slate-300 selection:bg-cyan-500/30 selection:text-cyan-300 font-sans">
+        <BackgroundGrid />
+
         {/* Header */}
-        <header className="sticky top-0 z-50 border-b bg-background/80 dark:bg-white/80 backdrop-blur">
+        <header className="sticky top-0 z-50 border-b border-white/5 bg-[#020617]/80 backdrop-blur-md">
           <Container className="flex h-16 items-center justify-between">
             <div className="flex items-center gap-3">
-              <div className="h-8 w-8 rounded-2xl bg-primary/15 grid place-items-center">
-                <Shield className="h-5 w-5"/>
+              <div className="relative h-8 w-8 rounded bg-gradient-to-br from-blue-600 to-cyan-500 grid place-items-center shadow-lg shadow-blue-500/20">
+                <Shield className="h-4 w-4 text-white"/>
               </div>
-              <span className="font-semibold text-zinc-900 dark:text-zinc-900">
-        {PROFILE.name}
-      </span>
+              <span className="font-bold tracking-tight text-white">
+                {PROFILE.name}
+              </span>
             </div>
 
-            <nav className="hidden md:flex items-center gap-1">
+            <nav className="hidden lg:flex items-center gap-2">
               {[
                 ["About", "about"],
                 ["Skills", "skills"],
                 ["Experience", "experience"],
                 ["Projects", "projects"],
-                ["Profile at a Glance", "profile"],
+                ["Profile", "profile"],
                 ["Contact", "contact"],
               ].map(([label, id]) => (
                   <Button
                       key={id}
                       variant="ghost"
-                      className="px-3 text-zinc-900 dark:text-zinc-900"
+                      className="text-sm font-medium text-slate-400 hover:text-cyan-400 hover:bg-white/5 transition-all"
                       onClick={() => scrollToId(id)}
                   >
                     {label}
@@ -304,120 +268,101 @@ export default function App() {
               ))}
             </nav>
 
-            <div className="flex items-center gap-2">
-              <Button
-                  variant="outline"
-                  onClick={() => setDark((d) => !d)}
-                  aria-label="Toggle theme"
-              >
-                {dark ? <Sun className="h-4 w-4"/> : <Moon className="h-4 w-4"/>}
+            <div className="flex items-center gap-3">
+              <Button onClick={() => scrollToId("contact")} className="bg-blue-600 hover:bg-blue-500 text-white border-0">
+                <Mail className="mr-2 h-4 w-4"/> Get in touch
               </Button>
-
-              <a href={`mailto:${PROFILE.email}`}>
-                <Button>
-                  <Mail className="mr-2 h-4 w-4"/> Get in touch!
-                </Button>
-              </a>
             </div>
           </Container>
         </header>
 
-
         {/* Hero */}
-        <section className="relative overflow-hidden border-b">
+        <section className="relative overflow-hidden pt-20 pb-32">
           <Container>
-            <div className="grid items-center gap-8 py-12 md:grid-cols-2 md:py-20">
-              {/* Left column */}
-              <motion.div
-                  initial={{opacity: 0, y: 12}}
-                  animate={{opacity: 1, y: 0}}
-                  transition={{duration: 0.6}}
-              >
-                <div
-                    className="inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs text-muted-foreground">
-                  <span className="inline-block h-2 w-2 rounded-full bg-emerald-500"/>{" "}
-                  Currently working as Identity & Access Management Engineer
+            <div className="grid items-center gap-16 md:grid-cols-2">
+              <motion.div initial={{opacity: 0, x: -20}} animate={{opacity: 1, x: 0}} transition={{duration: 0.6}}>
+                <div className="inline-flex items-center gap-2 rounded-full border border-cyan-500/30 bg-cyan-950/30 px-4 py-1.5 text-xs font-medium text-cyan-400 mb-8 backdrop-blur-sm">
+                  <span className="relative flex h-2 w-2">
+                    <span className="absolute inline-flex h-full w-full rounded-full bg-cyan-400 opacity-75 animate-ping"></span>
+                    <span className="relative inline-flex rounded-full h-2 w-2 bg-cyan-500"></span>
+                  </span>
+                  Currently: IAM Engineer @ Hochschule Fulda
                 </div>
-                <h1 className="mt-4 text-4xl font-bold tracking-tight md:text-5xl">
+
+                <h1 className="text-4xl font-extrabold tracking-tight md:text-5xl lg:text-6xl text-white mb-6">
                   {PROFILE.name}
                 </h1>
-                <p className="mt-2 text-xl text-muted-foreground">{PROFILE.role}</p>
-                <p className="mt-4 max-w-prose leading-relaxed text-muted-foreground">
+                <p className="text-xl text-cyan-400 font-medium mb-6">{PROFILE.role}</p>
+                <p className="text-lg text-slate-400 leading-relaxed max-w-lg mb-8">
                   {PROFILE.summary}
                 </p>
-                <div className="mt-6 flex flex-wrap gap-3">
+
+                <div className="flex flex-wrap gap-4">
                   <a href={PROFILE.links.github} target="_blank" rel="noreferrer">
-                    <Button variant="outline">
-                      <Github className="mr-2 h-4 w-4"/>
-                      GitHub
+                    <Button variant="outline" className="h-12 px-8 text-base border-white/10 bg-white/5 text-white hover:bg-white/10 hover:border-white/20 transition-all">
+                      <Github className="mr-2 h-5 w-5"/> GitHub
                     </Button>
                   </a>
                   <a href={PROFILE.links.linkedin} target="_blank" rel="noreferrer">
-                    <Button variant="outline">
-                      <Linkedin className="mr-2 h-4 w-4"/>
-                      LinkedIn
+                    <Button className="h-12 px-8 text-base bg-blue-600 hover:bg-blue-500 text-white border-0 shadow-[0_0_20px_rgba(37,99,235,0.3)] transition-all hover:scale-105">
+                      <Linkedin className="mr-2 h-5 w-5"/> LinkedIn
                     </Button>
                   </a>
-                  <Button onClick={() => scrollToId("contact")}>
-                    Contact <ArrowRight className="ml-2 h-4 w-4"/>
-                  </Button>
                 </div>
-                <div className="mt-4 text-sm text-muted-foreground">
+                <div className="mt-8 text-sm text-slate-500">
                   <span className="mr-3">{PROFILE.location}</span>•
-                  <span className="ml-3">{PROFILE.email}</span>
+                  <span className="ml-3 font-mono">{PROFILE.email}</span>
                 </div>
               </motion.div>
 
-              {/* Right column — Avatar + What I do */}
-              <motion.div
-                  className="relative flex flex-col items-center gap-6"
-                  initial={{opacity: 0, y: 12}}
-                  animate={{opacity: 1, y: 0}}
-                  transition={{duration: 0.6, delay: 0.1}}
-              >
-                {/* Avatar */}
-                <img
-                    src="/profilepic.jpeg" // put your image in /public
-                    alt={PROFILE.name}
-                    className="w-48 h-48 rounded-full object-cover border-4 border-background shadow-lg"
-                />
+              <motion.div className="relative flex flex-col items-center gap-8" initial={{opacity: 0, y: 12}} animate={{opacity: 1, y: 0}} transition={{duration: 0.6, delay: 0.1}}>
+                <div className="relative h-48 w-48 rounded-full border-[3px] border-white/10 p-1 shadow-2xl bg-black">
+                  <div className="h-full w-full rounded-full overflow-hidden relative">
+                    <img
+                        src={PROFILE.avatarUrl}
+                        alt={PROFILE.name}
+                        className="h-full w-full object-cover"
+                        onError={(e) => { e.target.style.display='none'; e.target.nextSibling.style.display='grid'; }}
+                    />
+                    <div className="hidden h-full w-full bg-[#0f172a] place-items-center">
+                      <UserCheck className="h-16 w-16 text-slate-500" />
+                    </div>
+                  </div>
+                </div>
 
-                {/* What I do */}
-                <Card className="relative w-full overflow-hidden">
-                  <CardHeader>
-                    <CardTitle className="text-lg">What I do</CardTitle>
+                <Card className="relative w-full overflow-hidden border-white/10 bg-[#0f172a]/80 backdrop-blur-xl shadow-2xl">
+                  <CardHeader className="border-b border-white/5 pb-3">
+                    <CardTitle className="text-sm font-mono text-cyan-500 uppercase tracking-wider">System Capabilities</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    {/* Icon grid */}
+                  <CardContent className="pt-6">
                     <div className="grid grid-cols-2 gap-4">
                       {heroIcons.map(({Icon, label}, idx) => (
                           <motion.div
                               key={label}
-                              className="rounded-2xl border p-4 grid place-items-center text-center"
+                              className="group rounded-xl border border-white/5 bg-white/5 p-4 flex flex-col items-center hover:border-cyan-500/30 hover:bg-cyan-950/30 transition-all duration-300"
                               initial={{opacity: 0, y: 8}}
                               whileInView={{opacity: 1, y: 0}}
                               viewport={{once: true}}
                               transition={{delay: idx * 0.05}}
                           >
-                            <Icon className="h-6 w-6 mb-2"/>
-                            <div className="text-sm font-medium">{label}</div>
+                            <Icon className="h-6 w-6 mb-2 text-slate-400 group-hover:text-cyan-400 transition-colors"/>
+                            <div className="text-sm font-medium text-slate-300 group-hover:text-white">{label}</div>
                           </motion.div>
                       ))}
                     </div>
 
-                    {/* Quick facts */}
                     <div className="mt-6 grid grid-cols-1 sm:grid-cols-3 gap-3">
                       {[
-                        {k: "Experience", v: "Security, Software Dev, Cloud, AI"},
-                        {k: "Strength", v: "Secure Programming, DevSecOps"},
-                        {k: "Currently working as", v: "IAM (Security) Engineer at Hochschule Fulda"},
+                        {k: "Focus", v: "IAM, Cloud, AI"},
+                        {k: "Strength", v: "Policy-as-Code"},
+                        {k: "Status", v: "Employed"},
                       ].map((item) => (
                           <div
                               key={item.k}
-                              className="rounded-xl border px-3 py-2 text-sm"
+                              className="rounded-xl border border-white/10 bg-white/5 px-3 py-2 text-sm"
                           >
-                            <div className="font-medium">{item.k}</div>
-                            <div className="text-muted-foreground">{item.v}</div>
+                            <div className="font-medium text-slate-500">{item.k}</div>
+                            <div className="text-cyan-300">{item.v}</div>
                           </div>
                       ))}
                     </div>
@@ -429,49 +374,47 @@ export default function App() {
         </section>
 
         {/* About */}
-        <Section id="about" title="About" subtitle="Quick snapshot of who I am and how I work.">
+        <Section id="about" title="Philosophy" subtitle="Quick snapshot of who I am and how I work.">
           <div className="grid gap-6 md:grid-cols-3">
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5 hover:border-cyan-500/30 transition-all">
               <CardHeader>
-                <CardTitle>Principles</CardTitle>
+                <div className="h-10 w-10 rounded-lg bg-blue-900/20 grid place-items-center mb-3 border border-blue-500/20">
+                  <Shield className="h-5 w-5 text-cyan-400" />
+                </div>
+                <CardTitle className="text-white">Principles</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
+              <CardContent className="space-y-2 text-sm text-slate-400">
                 <p>Security-by-default • Infrastructure-as-Code • Everything tests.</p>
                 <p>Automate the boring parts. Measure, iterate, improve.</p>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5 hover:border-cyan-500/30 transition-all">
               <CardHeader>
-                <CardTitle>Highlights</CardTitle>
+                <div className="h-10 w-10 rounded-lg bg-blue-900/20 grid place-items-center mb-3 border border-blue-500/20">
+                  <TerminalSquare className="h-5 w-5 text-cyan-400" />
+                </div>
+                <CardTitle className="text-white">Highlights</CardTitle>
               </CardHeader>
-              <CardContent className="space-y-2 text-sm text-muted-foreground">
-                <ul className="list-disc pl-5 space-y-2">
+              <CardContent className="space-y-2 text-sm text-slate-400">
+                <ul className="list-disc pl-5 space-y-2 marker:text-cyan-500">
                   <li>Engineered secure, scalable software solutions by integrating Policy-as-Code into the SSDLC.</li>
-                  <li>Enhanced container security through automated compliance checks and vulnerability remediation.
-                  </li>
-                  <li>Combined development and security expertise to deliver tools for continuous monitoring and risk
-                    reduction.
-                  </li>
+                  <li>Enhanced container security through automated compliance checks.</li>
+                  <li>Combined development and security expertise.</li>
                 </ul>
               </CardContent>
             </Card>
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5 hover:border-cyan-500/30 transition-all">
               <CardHeader>
-                <CardTitle>Stack</CardTitle>
+                <div className="h-10 w-10 rounded-lg bg-blue-900/20 grid place-items-center mb-3 border border-blue-500/20">
+                  <Code className="h-5 w-5 text-cyan-400" />
+                </div>
+                <CardTitle className="text-white">Stack</CardTitle>
               </CardHeader>
               <CardContent className="flex flex-wrap gap-2">
                 {[
-                  "Python",
-                  "Java",
-                  "Go",
-                  "React",
-                  "FastAPI",
-                  "OPA/Rego",
-                  "AWS",
-                  "Kubernetes",
-                  "GitLab CI",
+                  "Python", "Java", "Go", "React", "FastAPI", "OPA/Rego", "AWS", "Kubernetes", "GitLab CI",
                 ].map((t) => (
-                    <Badge key={t} variant="secondary" className="px-2 py-1 text-xs">
+                    <Badge key={t} className="px-2 py-1 text-xs bg-blue-950/50 text-cyan-300 border-blue-800/50 hover:bg-cyan-950/50">
                       {t}
                     </Badge>
                 ))}
@@ -481,63 +424,45 @@ export default function App() {
         </Section>
 
         {/* Skills */}
-        <Section
-            id="skills"
-            title="Skills"
-            subtitle="A visual snapshot of my current strengths."
-        >
+        <Section id="skills" title="Skills" subtitle="A visual snapshot of my current strengths.">
           <div className="grid gap-6 md:grid-cols-2">
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Core Competencies</CardTitle>
+                <CardTitle className="text-slate-200">Core Competencies</CardTitle>
               </CardHeader>
               <CardContent className="h-[340px]">
                 <ResponsiveContainer width="100%" height="100%">
                   <RadarChart data={SKILLS_RADAR} cx="50%" cy="50%" outerRadius="75%">
-                    {/* Softer, circular grid */}
-                    <PolarGrid gridType="circle"/>
-                    {/* Wrap long labels; no tick line */}
-                    <PolarAngleAxis dataKey="subject" tick={<AngleTick/>} tickLine={false}/>
-                    {/* Hide numbers (radius ticks) and axis line */}
-                    <PolarRadiusAxis tick={false} axisLine={false} tickCount={5}/>
-                    {/* Cleaner radar style */}
+                    <PolarGrid stroke="#334155" />
+                    <PolarAngleAxis dataKey="subject" tick={{ fill: '#94a3b8', fontSize: 11 }} />
+                    <PolarRadiusAxis tick={false} axisLine={false} />
                     <Radar
                         dataKey="A"
-                        stroke="currentColor"
+                        stroke="#06b6d4"
                         strokeWidth={2}
-                        fill="currentColor"
-                        fillOpacity={0.15}
-                        isAnimationActive
+                        fill="#06b6d4"
+                        fillOpacity={0.2}
                     />
-                    <Tooltip contentStyle={{borderRadius: 12}}/>
+                    <Tooltip
+                        contentStyle={{borderRadius: 8, border: '1px solid #1e293b', background: '#020617', color: '#fff'}}
+                        itemStyle={{ color: '#22d3ee' }}
+                    />
                   </RadarChart>
                 </ResponsiveContainer>
               </CardContent>
             </Card>
 
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5 backdrop-blur-sm">
               <CardHeader>
-                <CardTitle>Keywords & Tools</CardTitle>
+                <CardTitle className="text-slate-200">Keywords & Tools</CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex flex-wrap gap-2">
                   {[
-                    "Python",
-                    "Java",
-                    "JavaScript",
-                    "Vulnerability Scanning",
-                    "Data Analysis",
-                    "Secure Programming",
-                    "Cloud Computing",
-                    "Web Development",
-                    "DevOps",
-                    "DevSecOps",
-                    "Artificial Intelligence",
-                    "Machine Learning ",
-                    "Git",
-                    "Linux",
+                    "Python", "Java", "JavaScript", "Vulnerability Scanning", "Data Analysis", "Secure Programming",
+                    "Cloud Computing", "Web Development", "DevOps", "DevSecOps", "AI", "Machine Learning", "Git", "Linux",
                   ].map((t) => (
-                      <Badge key={t} className="px-2 py-1 text-xs">
+                      <Badge key={t} className="px-2 py-1 text-xs bg-white/5 border-white/10 text-slate-300 hover:bg-white/10">
                         {t}
                       </Badge>
                   ))}
@@ -548,41 +473,38 @@ export default function App() {
         </Section>
 
         {/* Experience */}
-        <Section
-            id="experience"
-            title="Experience"
-            subtitle="Roles, responsibilities, and impact."
-        >
-          <div className="space-y-6">
+        <Section id="experience" title="Experience" subtitle="Roles, responsibilities, and impact.">
+          <div className="relative border-l border-white/10 ml-3 space-y-12 pb-4">
             {EXPERIENCE.map((exp, i) => (
-                <motion.div
-                    key={exp.company + i}
-                    initial={{opacity: 0, y: 10}}
-                    whileInView={{opacity: 1, y: 0}}
-                    viewport={{once: true}}
-                >
-                  <Card>
+                <motion.div key={i} className="relative pl-8 md:pl-12" initial={{opacity: 0, x: -10}} whileInView={{opacity: 1, x: 0}} viewport={{once: true}}>
+                  {/* Timeline dot */}
+                  <div className="absolute -left-[5px] top-2 h-2.5 w-2.5 rounded-full bg-cyan-500 shadow-[0_0_10px_rgba(6,182,212,0.8)]"></div>
+
+                  <Card className="bg-[#0f172a]/40 border-white/5 hover:border-cyan-500/30 transition-all">
                     <CardHeader className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
                       <div>
-                        <CardTitle className="text-xl">
-                          {exp.role} · {exp.company}
+                        <CardTitle className="text-xl text-white">
+                          {exp.role}
                         </CardTitle>
-                        <p className="text-sm text-muted-foreground">{exp.period}</p>
+                        <div className="text-lg text-cyan-400 font-medium">{exp.company}</div>
                       </div>
-                      <div className="flex flex-wrap gap-2">
-                        {exp.tags.map((t) => (
-                            <Badge key={t} variant="secondary" className="text-xs">
-                              {t}
-                            </Badge>
-                        ))}
+                      <div className="font-mono text-sm text-slate-400 bg-white/5 border border-white/5 px-2 py-1 rounded">
+                        {exp.period}
                       </div>
                     </CardHeader>
                     <CardContent>
-                      <ul className="list-disc pl-5 space-y-2 text-sm text-muted-foreground">
+                      <ul className="list-disc pl-5 space-y-2 text-sm text-slate-400 marker:text-cyan-500">
                         {exp.bullets.map((b, idx) => (
                             <li key={idx}>{b}</li>
                         ))}
                       </ul>
+                      <div className="mt-4 flex flex-wrap gap-2">
+                        {exp.tags.map((t) => (
+                            <span key={t} className="text-xs text-slate-500 font-mono border border-white/5 px-2 py-1 rounded bg-[#000000]/40">
+                                {t}
+                             </span>
+                        ))}
+                      </div>
                     </CardContent>
                   </Card>
                 </motion.div>
@@ -591,39 +513,31 @@ export default function App() {
         </Section>
 
         {/* Projects */}
-        <Section
-            id="projects"
-            title="Featured Projects"
-            subtitle="Some of my featured projects. More on my Github!"
-        >
+        <Section id="projects" title="Featured Projects" subtitle="Some of my featured projects. More on my Github!">
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {PROJECTS.map((p) => (
-                <Card
-                    key={p.title}
-                    className="group overflow-hidden transition hover:shadow-lg hover:-translate-y-0.5"
-                >
+                <Card key={p.title} className="group flex flex-col overflow-hidden border-white/5 bg-[#0f172a]/40 backdrop-blur-sm transition-all hover:border-cyan-500/40 hover:bg-[#0f172a]/60 hover:-translate-y-1">
                   <CardHeader>
-                    <CardTitle className="text-lg">{p.title}</CardTitle>
+                    <CardTitle className="text-lg text-white group-hover:text-cyan-400 transition-colors">{p.title}</CardTitle>
                   </CardHeader>
-                  <CardContent>
-                    <p className="text-sm text-muted-foreground min-h-[54px]">
+                  <CardContent className="flex-1 flex flex-col justify-between">
+                    <p className="text-sm text-slate-400 mb-6">
                       {p.description}
                     </p>
-                    <div className="mt-4 flex flex-wrap gap-2">
-                      {p.tags.map((t) => (
-                          <Badge key={t} variant="secondary" className="text-xs">
-                            {t}
-                          </Badge>
-                      ))}
+                    <div className="space-y-4">
+                      <div className="flex flex-wrap gap-2">
+                        {p.tags.map((t) => (
+                            <span key={t} className="text-[10px] font-mono border border-cyan-900/30 bg-cyan-950/20 text-cyan-200/70 px-1.5 py-0.5 rounded">
+                                {t}
+                            </span>
+                        ))}
+                      </div>
+                      <a href={p.link} target="_blank" rel="noreferrer" className="block">
+                        <Button variant="outline" className="w-full text-xs h-9 border-white/10 bg-transparent text-slate-300 hover:text-white hover:border-cyan-500/50 hover:bg-cyan-950/30">
+                          Visit <ExternalLink className="ml-2 h-3 w-3"/>
+                        </Button>
+                      </a>
                     </div>
-                    <a
-                        href={p.link}
-                        target="_blank"
-                        rel="noreferrer"
-                        className="mt-4 inline-flex items-center text-sm"
-                    >
-                      Visit <ExternalLink className="ml-1 h-4 w-4"/>
-                    </a>
                   </CardContent>
                 </Card>
             ))}
@@ -631,29 +545,21 @@ export default function App() {
         </Section>
 
         {/* Profile at a glance */}
-        {/* Profile at a glance (stacked like Experience) */}
-        <Section
-            id="profile"
-            title="Profile at a glance"
-            subtitle="Education, publications, skills, and languages."
-        >
+        <Section id="profile" title="Profile at a glance" subtitle="Education, publications, skills, and languages.">
           <div className="space-y-6">
             {/* Education */}
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5">
               <CardHeader>
-                <CardTitle className="text-lg font-bold tracking-tight">Education</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight text-white">Education</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm space-y-4">
+              <CardContent className="text-sm space-y-4 text-slate-400">
                 {EDUCATION.map((e, i) => (
-                    <div
-                        key={i}
-                        className={i !== 0 ? "pt-4 mt-4 border-t border-border" : ""}
-                    >
-                      <div className="font-semibold text-base text-foreground">{e.degree}</div>
-                      <div className="text-muted-foreground">{e.detail}</div>
-                      <div className="text-muted-foreground">{e.thesis}</div>
-                      <div className="italic text-muted-foreground">{e.period}</div>
-                      <div className="text-xs uppercase tracking-wide text-primary">
+                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t border-white/5" : ""}>
+                      <div className="font-semibold text-base text-slate-200">{e.degree}</div>
+                      <div className="text-slate-400">{e.detail}</div>
+                      <div className="text-slate-400">{e.thesis}</div>
+                      <div className="italic text-slate-500">{e.period}</div>
+                      <div className="text-xs uppercase tracking-wide text-cyan-500 mt-1">
                         {e.school} — {e.location}
                       </div>
                     </div>
@@ -662,19 +568,16 @@ export default function App() {
             </Card>
 
             {/* Scientific Papers */}
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5">
               <CardHeader>
-                <CardTitle className="text-lg font-bold tracking-tight">Scientific Papers</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight text-white">Scientific Papers</CardTitle>
               </CardHeader>
-              <CardContent className="text-sm space-y-4">
+              <CardContent className="text-sm space-y-4 text-slate-400">
                 {PAPERS.map((p, i) => (
-                    <div
-                        key={i}
-                        className={i !== 0 ? "pt-4 mt-4 border-t border-border" : ""}
-                    >
-                      <div className="font-semibold text-base text-foreground">{p.title}</div>
-                      <div className="italic text-muted-foreground">{p.period}</div>
-                      <div className="text-xs uppercase tracking-wide text-primary">
+                    <div key={i} className={i !== 0 ? "pt-4 mt-4 border-t border-white/5" : ""}>
+                      <div className="font-semibold text-base text-slate-200">{p.title}</div>
+                      <div className="italic text-slate-500">{p.period}</div>
+                      <div className="text-xs uppercase tracking-wide text-cyan-500 mt-1">
                         {p.org} — {p.location}
                       </div>
                     </div>
@@ -682,17 +585,16 @@ export default function App() {
               </CardContent>
             </Card>
 
-            {/* Technical Skills */}
-            <Card>
+            {/* Technical Skills Typewriter Section */}
+            <Card className="bg-[#0f172a]/50 border-white/5">
               <CardHeader>
-                <CardTitle className="text-lg font-bold tracking-tight text-black dark:text-white">
+                <CardTitle className="text-lg font-bold tracking-tight text-white">
                   Technical Skills
                 </CardTitle>
               </CardHeader>
 
               <CardContent className="relative">
                 {(() => {
-                  // ---- grouped data (edit freely) ----
                   const GROUPS = [
                     { k: "Programming", v: "Python, Java, JavaScript, TypeScript, Rego, Go, R" },
                     { k: "Frontend", v: "React, React Native, Angular, Vue, Vaadin" },
@@ -706,7 +608,6 @@ export default function App() {
                     { k: "Compliance", v: "ISO/IEC 27001, DB RAIS, BSI IT-Grundschutz, GDPR" },
                   ];
 
-                  // ---- split only on commas OUTSIDE parentheses ----
                   function splitSkills(str) {
                     const res = [];
                     let cur = "", depth = 0;
@@ -726,9 +627,9 @@ export default function App() {
 
                   const all = GROUPS.flatMap((g) => splitSkills(g.v));
 
-                  // ---- typewriter state ----
+                  // Typewriter State
                   const [idx, setIdx] = React.useState(0);
-                  const [phase, setPhase] = React.useState("typing"); // typing | pause | deleting
+                  const [phase, setPhase] = React.useState("typing");
                   const [cursor, setCursor] = React.useState(true);
                   const current = all[idx % all.length] || "";
                   const [shown, setShown] = React.useState("");
@@ -759,35 +660,23 @@ export default function App() {
                     return () => clearTimeout(t);
                   }, [shown, phase, current]);
 
-                  // ---- visuals ----
-                  const bgDots =
-                      "bg-[radial-gradient(circle_at_1px_1px,theme(colors.zinc.300)_1px,transparent_1px)] dark:bg-[radial-gradient(circle_at_1px_1px,theme(colors.zinc.700)_1px,transparent_1px)] bg-[length:18px_18px] rounded-2xl p-4 md:p-6 border";
-
-                  const sizeFor = (tag) =>
-                      tag.length <= 4 ? "text-xl md:text-2xl"
-                          : tag.length <= 8 ? "text-lg"
-                              : "text-base";
-
                   return (
-                      <div className={bgDots}>
-                        {/* Typewriter */}
+                      <div className="bg-white/5 rounded-2xl p-4 md:p-6 border border-white/5">
                         <div className="mb-6">
-                          <div className="text-sm uppercase tracking-wider text-muted-foreground mb-2">
+                          <div className="text-sm uppercase tracking-wider text-slate-500 mb-2">
                             I have experience with ...
                           </div>
-                          <div className="font-mono text-lg md:text-xl border rounded-xl px-3 py-2 bg-background/70 backdrop-blur flex items-center">
-                            <span className="text-foreground">{">"}</span>
-                            <span className="ml-2">{shown}</span>
-                            <span className={`ml-1 w-2 ${cursor ? "opacity-100" : "opacity-0"}`}>|</span>
+                          <div className="font-mono text-lg md:text-xl border border-cyan-500/30 rounded-xl px-3 py-2 bg-[#020617] flex items-center shadow-[0_0_15px_rgba(6,182,212,0.1)]">
+                            <span className="text-cyan-500 mr-2">{">"}</span>
+                            <span className="text-cyan-100">{shown}</span>
+                            <span className={`ml-1 w-2 text-cyan-500 ${cursor ? "opacity-100" : "opacity-0"}`}>|</span>
                           </div>
                         </div>
 
-                        {/* Categorised cloud */}
                         <div className="space-y-6">
                           {GROUPS.map((g, gi) => (
                               <div key={gi}>
-                                {/* Category title: PURE black/white via theme */}
-                                <div className="mb-2 text-sm font-semibold tracking-wide text-black dark:text-white">
+                                <div className="mb-2 text-sm font-semibold tracking-wide text-white">
                                   {g.k}
                                 </div>
                                 <div className="flex flex-wrap gap-2">
@@ -797,15 +686,14 @@ export default function App() {
                                         <span
                                             key={ti}
                                             className={[
-                                              "inline-flex select-none items-center rounded-xl border px-3 py-1.5 transition-all shadow-sm",
-                                              sizeFor(tag),
+                                              "inline-flex select-none items-center rounded-md border px-2.5 py-1 text-xs transition-all",
                                               isActive
-                                                  ? "bg-foreground/5 border-foreground/30 text-foreground scale-[1.03]"
-                                                  : "bg-background text-foreground hover:scale-105",
+                                                  ? "bg-cyan-500/20 border-cyan-500/50 text-cyan-300 scale-105 shadow-[0_0_10px_rgba(6,182,212,0.3)]"
+                                                  : "bg-white/5 border-white/5 text-slate-400 hover:bg-white/10 hover:text-white",
                                             ].join(" ")}
                                         >
-                        {tag}
-                      </span>
+                                            {tag}
+                                        </span>
                                     );
                                   })}
                                 </div>
@@ -818,204 +706,131 @@ export default function App() {
               </CardContent>
             </Card>
 
-
-
             {/* Soft Skills */}
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5">
               <CardHeader>
-                <CardTitle className="text-lg font-bold tracking-tight">Soft Skills</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight text-white">Soft Skills</CardTitle>
               </CardHeader>
-
               <CardContent className="text-sm">
-                {(() => {
-                  const CORE = [
-                    { label: "Self-driven initiative", icon: "🚀" },
-                    { label: "Team communication", icon: "💬" },
-                    { label: "Multilingual proficiency", icon: "🌍" },
-                    { label: "Adaptability (agile)", icon: "⚡" },
-                  ];
-
-                  const HOBBIES = [
-                    { label: "Learning new tech", icon: "💻" },
-                    { label: "Board & video games", icon: "🎮" },
-                    { label: "Music production", icon: "🎵" },
-                    { label: "Travelling", icon: "✈️" },
-                  ];
-
-                  const SPORTS = [
-                    { label: "Fitness", icon: "🏋️‍♂️" },
-                    { label: "Badminton", icon: "🏸" },
-                    { label: "Football", icon: "⚽" },
-                    { label: "Bike-riding", icon: "🚴‍♂️" },
-                    { label: "Hiking", icon: "🥾" },
-                  ];
-
-                  const Chip = ({ text, icon }) => (
-                      <span className="inline-flex items-center gap-1 rounded-full border px-3 py-1.5 bg-background text-foreground">
-          <span aria-hidden>{icon}</span> {text}
-        </span>
-                  );
-
-                  const Section = ({ title, items }) => (
-                      <div>
-                        <div className="mb-2 font-medium text-foreground">{title}</div>
-                        <div className="flex flex-wrap gap-2">
-                          {items.map((item, i) => (
-                              <Chip key={i} text={item.label} icon={item.icon} />
-                          ))}
-                        </div>
-                      </div>
-                  );
-
-                  return (
-                      <div className="space-y-6">
-                        <Section title="Core" items={CORE} />
-                        <Section title="Hobbies" items={HOBBIES} />
-                        <Section title="Sports" items={SPORTS} />
-                      </div>
-                  );
-                })()}
+                <div className="space-y-6">
+                  <div>
+                    <div className="mb-2 font-medium text-slate-300">Core</div>
+                    <div className="flex flex-wrap gap-2">
+                      {["Self-driven initiative", "Team communication", "Multilingual proficiency", "Adaptability (agile)"].map(t => (
+                          <span key={t} className="inline-flex items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 bg-white/5 text-slate-300">
+                                   {t}
+                               </span>
+                      ))}
+                    </div>
+                  </div>
+                  <div>
+                    <div className="mb-2 font-medium text-slate-300">Hobbies</div>
+                    <div className="flex flex-wrap gap-2">
+                      {["Learning new tech", "Board & video games", "Music production", "Travelling"].map(t => (
+                          <span key={t} className="inline-flex items-center gap-1 rounded-full border border-white/10 px-3 py-1.5 bg-white/5 text-slate-300">
+                                   {t}
+                               </span>
+                      ))}
+                    </div>
+                  </div>
+                </div>
               </CardContent>
             </Card>
 
-
-
             {/* Languages */}
-            <Card>
+            <Card className="bg-[#0f172a]/50 border-white/5">
               <CardHeader>
-                <CardTitle className="text-lg font-bold tracking-tight">Languages</CardTitle>
+                <CardTitle className="text-lg font-bold tracking-tight text-white">Languages</CardTitle>
               </CardHeader>
-
               <CardContent>
-                {(() => {
-                  // Define levels (0–100) + flag emoji
-                  const LANG = [
+                <div className="grid gap-4 sm:grid-cols-2">
+                  {[
                     { name: "German (DSH-2 / C1)", level: 90, flag: "🇩🇪", label: "Fluent" },
                     { name: "English (IELTS 8.0)", level: 100, flag: "🇬🇧", label: "Near-native" },
                     { name: "Marathi", level: 100, flag: "🇮🇳", label: "Native" },
                     { name: "Hindi", level: 100, flag: "🇮🇳", label: "Native" },
-                  ];
-
-                  // Simple circular progress (SVG)
-                  const Ring = ({ pct = 80 }) => {
-                    const R = 28; // radius
-                    const C = 2 * Math.PI * R;
-                    const dash = Math.max(0, Math.min(C, (pct / 100) * C));
-                    return (
-                        <svg width="72" height="72" viewBox="0 0 72 72" className="shrink-0">
-                          <circle cx="36" cy="36" r={R} stroke="currentColor" strokeOpacity="0.15" strokeWidth="6" fill="none" />
-                          <circle
-                              cx="36"
-                              cy="36"
-                              r={R}
-                              stroke="currentColor"
-                              strokeWidth="6"
-                              fill="none"
-                              strokeDasharray={`${dash} ${C - dash}`}
-                              strokeLinecap="round"
-                              style={{ transform: "rotate(-90deg)", transformOrigin: "36px 36px" }}
-                          />
-                        </svg>
-                    );
-                  };
-
-                  return (
-                      <div className="grid gap-4 sm:grid-cols-2">
-                        {LANG.map((l, i) => (
-                            <div
-                                key={l.name + i}
-                                className="flex items-center gap-4 rounded-xl border p-3 md:p-4 bg-background hover:shadow-sm transition"
-                            >
-                              <div className="relative">
-                                <Ring pct={l.level} />
-                                <div className="absolute inset-0 grid place-items-center">
-                                  <span className="text-2xl" aria-hidden>{l.flag}</span>
-                                </div>
-                              </div>
-                              <div className="min-w-0">
-                                <div className="font-medium text-foreground truncate">{l.name}</div>
-                                <div className="text-xs text-muted-foreground">{l.label}</div>
-                              </div>
-                              <div className="ml-auto text-sm text-muted-foreground">{l.level}%</div>
-                            </div>
-                        ))}
+                  ].map((l, i) => (
+                      <div key={i} className="flex items-center gap-4 rounded-xl border border-white/5 p-4 bg-white/5 hover:border-cyan-500/30 transition">
+                        <span className="text-2xl">{l.flag}</span>
+                        <div>
+                          <div className="font-medium text-slate-200">{l.name}</div>
+                          <div className="text-xs text-slate-500">{l.label}</div>
+                        </div>
                       </div>
-                  );
-                })()}
+                  ))}
+                </div>
               </CardContent>
             </Card>
-
           </div>
         </Section>
 
+        {/* Initialize Handshake Section */}
+        <Section id="contact" title="Initialize Handshake" subtitle="Let's discuss how I can contribute to your identity and security posture.">
+          <Card className="bg-gradient-to-br from-[#0f172a] to-blue-950/20 border-white/10 overflow-hidden relative">
+            <div className="absolute top-0 right-0 w-64 h-64 bg-cyan-500/5 blur-3xl rounded-full pointer-events-none"></div>
 
+            <CardContent className="pt-8">
+              <div className="grid gap-12 md:grid-cols-2 items-center">
+                {/* Left Side: Text & Links */}
+                <div>
+                  <h3 className="text-2xl font-bold mb-2 text-white">Let's connect</h3>
+                  <p className="text-slate-400 mb-6">
+                    Reach out if you want to chat about <span className="text-cyan-400 font-mono">DevOps</span>, <span className="text-cyan-400 font-mono">Security</span>, or <span className="text-cyan-400 font-mono">IAM</span>.
+                  </p>
 
-
-        {/* Contact */}
-        <Section
-            id="contact"
-            title="Get in touch"
-            subtitle="Happy to connect about software engineering, security engineering, DevOps, or AI development topics."
-        >
-          <Card>
-            <CardContent className="pt-6">
-              <div className="grid gap-4 md:grid-cols-3">
-                <a
-                    className="rounded-2xl border p-4 hover:bg-muted"
-                    href={`mailto:${PROFILE.email}`}
-                >
-                  <div className="flex items-center gap-3">
-                    <Mail className="h-5 w-5"/>
-                    <div>
-                      <div className="font-medium">Email</div>
-                      <div className="text-sm text-muted-foreground">
-                        {PROFILE.email}
+                  <div className="flex flex-col gap-4">
+                    <a className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-cyan-500/30 transition-all group" href={`mailto:${PROFILE.email}`}>
+                      <div className="h-12 w-12 rounded-full bg-blue-500/10 grid place-items-center text-blue-400 group-hover:text-white group-hover:bg-blue-500 transition-colors">
+                        <Mail className="h-5 w-5"/>
                       </div>
-                    </div>
+                      <div>
+                        <div className="font-medium text-white">Email</div>
+                        <div className="text-sm text-slate-400 font-mono group-hover:text-cyan-300">{PROFILE.email}</div>
+                      </div>
+                    </a>
+
+                    <a className="flex items-center gap-4 p-4 rounded-xl border border-white/5 bg-white/5 hover:bg-white/10 hover:border-cyan-500/30 transition-all group" href={PROFILE.links.linkedin} target="_blank" rel="noreferrer">
+                      <div className="h-12 w-12 rounded-full bg-blue-600/10 grid place-items-center text-blue-600 group-hover:text-white group-hover:bg-blue-600 transition-colors">
+                        <Linkedin className="h-5 w-5"/>
+                      </div>
+                      <div>
+                        <div className="font-medium text-white">LinkedIn</div>
+                        <div className="text-sm text-slate-400 font-mono group-hover:text-cyan-300">Connect on LinkedIn</div>
+                      </div>
+                    </a>
                   </div>
-                </a>
-                <a
-                    className="rounded-2xl border p-4 hover:bg-muted"
-                    href={PROFILE.links.linkedin}
-                    target="_blank"
-                    rel="noreferrer"
-                >
-                  <div className="flex items-center gap-3">
-                    <Linkedin className="h-5 w-5"/>
-                    <div>
-                      <div className="font-medium">LinkedIn</div>
-                      <div className="text-sm text-muted-foreground">
-                        /vedant-bodhe
-                      </div>
-                    </div>
-                  </div>
-                </a>
+                </div>
 
-                {PROFILE.phone && (
-                    <div className="rounded-2xl border p-4">
-                      <div className="flex items-center gap-3">
-                        <Phone className="h-5 w-5"/>
-                        <div>
-                          <div className="font-medium">Phone</div>
-                          <div className="text-sm text-muted-foreground">
-                            {PROFILE.phone}
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                )}
+                {/* Right Side: Terminal Visual */}
+                <div className="relative h-full min-h-[250px] rounded-xl bg-[#020617] border border-slate-800 p-6 font-mono text-sm text-cyan-400 overflow-hidden flex flex-col shadow-2xl">
+                  <div className="absolute top-0 left-0 right-0 h-10 bg-[#0f172a] flex items-center px-4 gap-2 border-b border-slate-800">
+                    <div className="w-3 h-3 rounded-full bg-red-500/80"></div>
+                    <div className="w-3 h-3 rounded-full bg-yellow-500/80"></div>
+                    <div className="w-3 h-3 rounded-full bg-green-500/80"></div>
+                    <div className="ml-4 text-xs text-slate-500">vedant@fulda:~</div>
+                  </div>
+
+                  <div className="mt-8 space-y-2 font-medium">
+                    <p><span className="text-blue-500">➜</span> <span className="text-purple-400">~</span> <span className="text-slate-400">./initiate_handshake.sh</span></p>
+                    <p className="text-yellow-400">Target: <span className="text-white">Inquirer</span></p>
+                    <p className="text-yellow-400">Establishing secure connection...</p>
+                    <p><span className="text-green-500">✓</span> Connection established.</p>
+                    <p className="mt-4">User: <span className="text-white">{PROFILE.name}</span></p>
+                    <p>Role: <span className="text-cyan-300">IAM Engineer</span></p>
+                    <p>Status: <span className="text-green-400">OPEN_TO_CHAT</span></p>
+                    <p className="animate-pulse mt-2"><span className="text-blue-500">➜</span> <span className="text-purple-400">~</span> <span className="w-2 h-4 bg-cyan-400 inline-block align-middle"></span></p>
+                  </div>
+                </div>
               </div>
-              <div className="mt-6 text-xs text-muted-foreground">
-                Prefer email first contact. Full CV available on request.
-              </div>
+              <div className="mt-8 text-xs text-slate-500 text-center border-t border-white/5 pt-4">Prefer email first contact. Full CV available on request.</div>
             </CardContent>
           </Card>
         </Section>
 
         {/* Footer */}
-        <footer className="border-t py-8">
+        <footer className="border-t border-white/5 py-8 bg-[#020617]">
           <Container>
-            <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+            <div className="flex flex-col md:flex-row items-center justify-between gap-3 text-sm text-slate-500">
               <div>
                 © {new Date().getFullYear()} {PROFILE.name}. All rights reserved.
               </div>
@@ -1024,7 +839,7 @@ export default function App() {
                     href={PROFILE.links.github}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1"
+                    className="inline-flex items-center gap-1 hover:text-white transition-colors"
                 >
                   <Github className="h-4 w-4"/>
                   GitHub
@@ -1033,12 +848,12 @@ export default function App() {
                     href={PROFILE.links.linkedin}
                     target="_blank"
                     rel="noreferrer"
-                    className="inline-flex items-center gap-1"
+                    className="inline-flex items-center gap-1 hover:text-white transition-colors"
                 >
                   <Linkedin className="h-4 w-4"/>
                   LinkedIn
                 </a>
-                <a href="#projects" className="inline-flex items-center gap-1">
+                <a href="#projects" className="inline-flex items-center gap-1 hover:text-white transition-colors">
                   Projects
                 </a>
               </div>
@@ -1053,6 +868,7 @@ export default function App() {
           section { page-break-inside: avoid; }
           .scroll-mt-24 { scroll-margin-top: 0; }
           .rounded-2xl, .rounded-2xl * { box-shadow: none !important; }
+          body { background: white !important; color: black !important; }
         }
       `}</style>
       </div>
